@@ -6,6 +6,7 @@ use App\Models\Application;
 use App\Models\JobListing;
 use App\Models\JobSeekerProfile;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class ApplicationService
 {
@@ -63,7 +64,7 @@ class ApplicationService
     /**
      * Get applications for a job listing
      */
-    public function getApplicationsForListing(JobListing $listing, string $status = null): Collection
+    public function getApplicationsForListing(JobListing $listing, string|null $status = null): Collection
     {
         $query = $listing->applications();
 
@@ -88,7 +89,7 @@ class ApplicationService
     public function getRecentApplications(int $days = 7, int $limit = 10): Collection
     {
         return Application::whereHas('jobListing', function ($query) {
-            $query->where('employer_id', auth()->user()->employerProfile->id);
+            $query->where('employer_id', Auth::user()->employerProfile->id);
         })
             ->where('applied_at', '>=', now()->subDays($days))
             ->orderBy('applied_at', 'desc')
