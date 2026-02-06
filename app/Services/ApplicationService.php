@@ -76,11 +76,11 @@ class ApplicationService
     }
 
     /**
-     * Get applications for a job seeker
+     * Get applications query for a job seeker
      */
-    public function getApplicationsForSeeker(JobSeekerProfile $seeker): Collection
+    public function getApplicationsForSeeker(JobSeekerProfile $seeker)
     {
-        return $seeker->applications()->orderBy('applied_at', 'desc')->get();
+        return $seeker->applications()->with(['jobListing', 'jobListing.employer'])->orderBy('applied_at', 'desc');
     }
 
     /**

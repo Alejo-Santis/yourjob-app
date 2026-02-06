@@ -2,23 +2,21 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class WorkExperience extends Model
 {
-    use SoftDeletes;
+    use HasUuids, SoftDeletes;
 
     protected $table = 'work_experiences';
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'string';
 
     protected $fillable = [
         'job_seeker_id',
-        'company',
-        'position',
+        'company_name',
+        'job_title',
         'industry_sector',
         'start_date',
         'end_date',

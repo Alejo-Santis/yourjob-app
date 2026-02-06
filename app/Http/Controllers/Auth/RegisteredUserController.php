@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Support\Str;
 
 class RegisteredUserController extends Controller
 {
@@ -38,22 +37,22 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::create([
-            'id' => Str::uuid(),
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'user_type' => $request->user_type,
         ]);
 
+        // Assign Spatie role
+        $user->assignRole($request->user_type);
+
         // Create corresponding profile
         if ($user->user_type === 'job_seeker') {
             JobSeekerProfile::create([
-                'id' => Str::uuid(),
                 'user_id' => $user->id,
                 'profile_completion_percentage' => 0,
             ]);
         } else if ($user->user_type === 'employer') {
             EmployerProfile::create([
-                'id' => Str::uuid(),
                 'user_id' => $user->id,
             ]);
         }

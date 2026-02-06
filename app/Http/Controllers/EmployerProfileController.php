@@ -120,15 +120,12 @@ class EmployerProfileController extends Controller
         $profile = Auth::user()->employerProfile;
         $status = $request->input('status');
 
-        $applications = $profile->jobListings()
-            ->with(['applications' => function ($query) use ($status) {
-                if ($status) {
-                    $query->where('status', $status);
-                }
-                $query->orderBy('applied_at', 'desc');
-            }])
-            ->get()
-            ->flatMap->applications
+        $jobListingIds = $profile->jobListings()->pluck('id');
+
+        $applications = \App\Models\Application::whereIn('job_listing_id', $jobListingIds)
+            ->with(['jobSeeker', 'jobListing'])
+            ->when($status, fn($query) => $query->where('status', $status))
+            ->orderBy('applied_at', 'desc')
             ->paginate(15);
 
         return Inertia::render('Employer/Applications/Index', [

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,12 +10,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class JobListing extends Model
 {
-    use SoftDeletes;
+    use HasUuids, SoftDeletes;
 
     protected $table = 'job_listings';
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'string';
 
     protected $fillable = [
         'employer_id',
@@ -40,6 +38,7 @@ class JobListing extends Model
         'status',
         'vacancy_count',
         'applications_count',
+        'view_count',
         'posted_at',
         'deadline_at',
         'closed_at',
@@ -108,7 +107,10 @@ class JobListing extends Model
 
     public function scopeSearchByTitle($query, $title)
     {
-        return $query->whereFullText(['title', 'description'], $title);
+        return $query->where(function ($q) use ($title) {
+            $q->where('title', 'ILIKE', "%{$title}%")
+              ->orWhere('description', 'ILIKE', "%{$title}%");
+        });
     }
 
     public function scopeByIndustry($query, $industry)

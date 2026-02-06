@@ -54,9 +54,7 @@
         <div class="navbar-content">
             <!-- Logo -->
             <a class="navbar-logo" href="/">
-                <div class="logo-icon">
-                    <i class="bi bi-briefcase-fill"></i>
-                </div>
+                <img src="/assets/logos/logo-2.png" alt="YourJob" class="logo-img" />
                 <span class="logo-text">YourJob</span>
             </a>
 
@@ -214,19 +212,13 @@
     }
 
     .navbar-logo:hover {
-        opacity: 0.8;
+        opacity: 0.85;
     }
 
-    .logo-icon {
-        width: 40px;
-        height: 40px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 1.125rem;
+    .logo-img {
+        height: 38px;
+        width: auto;
+        object-fit: contain;
     }
 
     .logo-text {
@@ -496,10 +488,8 @@
             font-size: 1.25rem;
         }
 
-        .logo-icon {
-            width: 36px;
-            height: 36px;
-            font-size: 1rem;
+        .logo-img {
+            height: 32px;
         }
     }
 </style>

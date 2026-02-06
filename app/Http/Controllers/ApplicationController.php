@@ -56,15 +56,12 @@ class ApplicationController extends Controller
         $employer = $user->employerProfile;
         $status = $request->input('status');
 
-        $applications = $employer->jobListings()
-            ->with(['applications' => function ($query) use ($status) {
-                if ($status) {
-                    $query->where('status', $status);
-                }
-                $query->orderBy('applied_at', 'desc');
-            }])
-            ->get()
-            ->flatMap->applications
+        $jobListingIds = $employer->jobListings()->pluck('id');
+
+        $applications = Application::whereIn('job_listing_id', $jobListingIds)
+            ->with(['jobSeeker', 'jobListing'])
+            ->when($status, fn($query) => $query->where('status', $status))
+            ->orderBy('applied_at', 'desc')
             ->paginate(15);
 
         return Inertia::render('Applications/Index', [

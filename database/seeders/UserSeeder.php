@@ -7,7 +7,6 @@ use App\Models\JobSeekerProfile;
 use App\Models\EmployerProfile;
 use App\Enums\UserType;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
@@ -20,7 +19,6 @@ class UserSeeder extends Seeder
         $adminUser = User::firstOrCreate(
             ['email' => 'admin@yourjob.test'],
             [
-                'id' => Str::uuid(),
                 'email_verified_at' => now(),
                 'password' => bcrypt('password'),
                 'user_type' => UserType::ADMIN,
@@ -31,11 +29,9 @@ class UserSeeder extends Seeder
 
         // Create Job Seeker Users
         for ($i = 1; $i <= 5; $i++) {
-            $userId = Str::uuid();
             $seekerUser = User::firstOrCreate(
                 ['email' => "seeker{$i}@yourjob.test"],
                 [
-                    'id' => $userId,
                     'email_verified_at' => now(),
                     'password' => bcrypt('password'),
                     'user_type' => UserType::JOB_SEEKER,
@@ -46,9 +42,8 @@ class UserSeeder extends Seeder
 
             // Create corresponding job seeker profile
             JobSeekerProfile::firstOrCreate(
-                ['user_id' => $userId],
+                ['user_id' => $seekerUser->id],
                 [
-                    'id' => Str::uuid(),
                     'full_name' => "Job Seeker {$i}",
                     'email' => "seeker{$i}@yourjob.test",
                     'phone' => '555-000-' . str_pad($i, 4, '0', STR_PAD_LEFT),
@@ -81,11 +76,9 @@ class UserSeeder extends Seeder
 
         // Create Employer Users
         for ($i = 1; $i <= 3; $i++) {
-            $userId = Str::uuid();
             $employerUser = User::firstOrCreate(
                 ['email' => "employer{$i}@yourjob.test"],
                 [
-                    'id' => $userId,
                     'email_verified_at' => now(),
                     'password' => bcrypt('password'),
                     'user_type' => UserType::EMPLOYER,
@@ -96,9 +89,8 @@ class UserSeeder extends Seeder
 
             // Create corresponding employer profile
             EmployerProfile::firstOrCreate(
-                ['user_id' => $userId],
+                ['user_id' => $employerUser->id],
                 [
-                    'id' => Str::uuid(),
                     'company_name' => "Tech Company {$i}",
                     'company_website' => "https://company{$i}.com",
                     'industry' => match($i % 3) {

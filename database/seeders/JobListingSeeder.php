@@ -8,7 +8,6 @@ use App\Enums\ContractType;
 use App\Enums\WorkMode;
 use App\Enums\JobListingStatus;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class JobListingSeeder extends Seeder
 {
@@ -80,7 +79,6 @@ class JobListingSeeder extends Seeder
                 $location = $locations[$count % count($locations)];
 
                 JobListing::create([
-                    'id' => Str::uuid(),
                     'employer_id' => $employer->id,
                     'title' => $jobTitles[$titleIndex],
                     'description' => $descriptions[$count % count($descriptions)],

@@ -93,10 +93,15 @@ class JobSeekerProfileController extends Controller
     public function recommendedJobs()
     {
         $profile = Auth::user()->jobSeekerProfile;
-        $jobs = $this->jobSeekerService->getRecommendedJobs($profile, 20)->paginate(12);
+        $matches = $profile->jobMatches()
+            ->where('status', 'active')
+            ->where('match_score', '>=', 75)
+            ->with('jobListing')
+            ->orderBy('match_score', 'desc')
+            ->paginate(12);
 
         return Inertia::render('JobSeeker/Dashboard/RecommendedJobs', [
-            'jobs' => $jobs,
+            'matches' => $matches,
         ]);
     }
 

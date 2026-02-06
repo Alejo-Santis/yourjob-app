@@ -2,18 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Application extends Model
 {
-    use SoftDeletes;
+    use HasUuids, SoftDeletes;
 
     protected $table = 'applications';
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'string';
 
     protected $fillable = [
         'job_seeker_id',
@@ -21,11 +19,13 @@ class Application extends Model
         'cover_letter',
         'additional_answers',
         'status',
-        'employer_response',
-        'responded_at',
+        'rejection_message',
         'applied_at',
+        'viewed_at',
+        'accepted_at',
+        'rejected_at',
+        'withdrawn_at',
         'view_count',
-        'last_viewed_at',
         'candidate_rating',
         'employer_rating',
         'rating_comment',
@@ -34,8 +34,10 @@ class Application extends Model
     protected $casts = [
         'additional_answers' => 'array',
         'applied_at' => 'datetime',
-        'responded_at' => 'datetime',
-        'last_viewed_at' => 'datetime',
+        'viewed_at' => 'datetime',
+        'accepted_at' => 'datetime',
+        'rejected_at' => 'datetime',
+        'withdrawn_at' => 'datetime',
         'candidate_rating' => 'integer',
         'employer_rating' => 'integer',
         'view_count' => 'integer',
@@ -116,21 +118,20 @@ class Application extends Model
 
     public function getTimeSinceLastViewed(): ?string
     {
-        return $this->last_viewed_at?->diffForHumans();
+        return $this->viewed_at?->diffForHumans();
     }
 
     public function markAsViewed(): void
     {
         $this->increment('view_count');
-        $this->update(['last_viewed_at' => now()]);
+        $this->update(['viewed_at' => now()]);
     }
 
     public function accept(string $message = ''): void
     {
         $this->update([
             'status' => 'accepted',
-            'employer_response' => $message ?: $this->employer_response,
-            'responded_at' => now(),
+            'accepted_at' => now(),
         ]);
     }
 
@@ -138,13 +139,16 @@ class Application extends Model
     {
         $this->update([
             'status' => 'rejected',
-            'employer_response' => $message ?: $this->employer_response,
-            'responded_at' => now(),
+            'rejection_message' => $message ?: $this->rejection_message,
+            'rejected_at' => now(),
         ]);
     }
 
     public function withdraw(): void
     {
-        $this->update(['status' => 'withdrawn']);
+        $this->update([
+            'status' => 'withdrawn',
+            'withdrawn_at' => now(),
+        ]);
     }
 }

@@ -115,16 +115,16 @@ class JobListingService
     public function getFeatured(int $limit = 5): Collection
     {
         return JobListing::active()
-            ->where('featured', true)
+            ->orderBy('applications_count', 'desc')
             ->orderBy('posted_at', 'desc')
             ->limit($limit)
             ->get();
     }
 
     /**
-     * Get listings by employer
+     * Get listings query by employer
      */
-    public function getByEmployer(EmployerProfile $employer, string $status = null): Collection
+    public function getByEmployer(EmployerProfile $employer, string $status = null)
     {
         $query = $employer->jobListings();
 
@@ -132,7 +132,7 @@ class JobListingService
             $query->where('status', $status);
         }
 
-        return $query->orderBy('posted_at', 'desc')->get();
+        return $query->orderBy('posted_at', 'desc');
     }
 
     /**
