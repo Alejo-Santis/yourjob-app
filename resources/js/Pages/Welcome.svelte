@@ -1,12 +1,19 @@
 <script>
-    import AppLayout from '../Layouts/AppLayout.svelte';
-    import { page } from '@inertiajs/svelte';
+    import GuestLayout from '../Layouts/GuestLayout.svelte';
+    import { page, router } from '@inertiajs/svelte';
 
     $: isAuthenticated = $page.props.auth?.user;
     $: userType = $page.props.auth?.user?.user_type;
+
+    let searchQuery = '';
+
+    function handleSearch(e) {
+        e.preventDefault();
+        router.get('/jobs', { title: searchQuery });
+    }
 </script>
 
-<AppLayout>
+<GuestLayout>
     <div class="welcome-container">
         <!-- Hero Section -->
         <section class="hero-section">
@@ -26,13 +33,13 @@
 
                         <!-- Search Bar -->
                         <div class="search-wrapper">
-                            <form action="/jobs" method="GET" class="search-form">
+                            <form on:submit={handleSearch} class="search-form">
                                 <button type="submit" class="search-btn">
                                     <i class="bi bi-search"></i>
                                 </button>
                                 <input
                                     type="text"
-                                    name="search"
+                                    bind:value={searchQuery}
                                     class="search-input"
                                     placeholder="Search jobs here"
                                 />
@@ -49,6 +56,10 @@
                                 {:else if userType === 'employer'}
                                     <a href="/employer/dashboard" class="btn btn-link text-decoration-none">
                                         <i class="bi bi-speedometer2 me-2"></i>Go to Dashboard
+                                    </a>
+                                {:else if userType === 'admin'}
+                                    <a href="/admin/dashboard" class="btn btn-link text-decoration-none">
+                                        <i class="bi bi-speedometer2 me-2"></i>Go to Admin Panel
                                     </a>
                                 {/if}
                             </div>
@@ -261,11 +272,10 @@
             </div>
         </section>
     </div>
-</AppLayout>
+</GuestLayout>
 
 <style>
     .welcome-container {
-        margin: -2rem -1.5rem;
         background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
     }
 
@@ -764,10 +774,6 @@
     }
 
     @media (max-width: 768px) {
-        .welcome-container {
-            margin: -1rem;
-        }
-
         .hero-section {
             padding: 60px 0 80px;
         }

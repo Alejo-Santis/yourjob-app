@@ -13,20 +13,33 @@
 
     const employerItems = [
         { label: 'Dashboard', href: '/employer/dashboard', icon: 'speedometer2' },
-        { label: 'Post Job', href: '/jobs/create', icon: 'plus-circle' },
+        { label: 'Post Job', href: '/employer/jobs/create', icon: 'plus-circle' },
         { label: 'My Listings', href: '/employer/listings', icon: 'list-check' },
         { label: 'Applications', href: '/employer/applications', icon: 'inbox' },
         { label: 'Analytics', href: '/employer/analytics', icon: 'graph-up' },
         { label: 'Profile', href: '/employer/profile', icon: 'person' },
     ];
 
-    const items = userType === 'job_seeker' ? jobSeekerItems : employerItems;
+    const adminItems = [
+        { label: 'Dashboard', href: '/admin/dashboard', icon: 'speedometer2' },
+        { label: 'Users', href: '/admin/users', icon: 'people' },
+        { label: 'Job Listings', href: '/admin/jobs', icon: 'briefcase' },
+        { label: 'Applications', href: '/admin/applications', icon: 'file-earmark-text' },
+    ];
+
+    const itemsMap = {
+        job_seeker: jobSeekerItems,
+        employer: employerItems,
+        admin: adminItems,
+    };
+
+    const items = itemsMap[userType] || jobSeekerItems;
 </script>
 
 <aside class="sidebar bg-white border-end">
     <div class="sidebar-content">
         <nav class="nav flex-column">
-            {#each items as item (item.href)}
+            {#each items as item (item.label)}
                 <a
                     href={item.href}
                     class="nav-link"

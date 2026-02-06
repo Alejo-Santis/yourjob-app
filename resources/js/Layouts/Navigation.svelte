@@ -26,8 +26,27 @@
     });
 
     $: isActive = (path) => {
+        if (path === '/') return $page.url === '/';
         return $page.url === path || $page.url.startsWith(path + '/');
     };
+
+    function getDashboardHref(userType) {
+        const map = {
+            job_seeker: '/job-seeker/dashboard',
+            employer: '/employer/dashboard',
+            admin: '/admin/dashboard',
+        };
+        return map[userType] || '/';
+    }
+
+    function getProfileHref(userType) {
+        const map = {
+            job_seeker: '/job-seeker/profile',
+            employer: '/employer/profile',
+            admin: '/admin/dashboard',
+        };
+        return map[userType] || '/';
+    }
 </script>
 
 <nav class="modern-navbar">
@@ -76,6 +95,12 @@
                                 Applications
                             </a>
                         </li>
+                    {:else if $page.props.auth.user.user_type === 'admin'}
+                        <li class="menu-item">
+                            <a href="/admin/dashboard" class="menu-link" class:active={isActive('/admin')}>
+                                Admin Panel
+                            </a>
+                        </li>
                     {/if}
                 {/if}
             </ul>
@@ -97,22 +122,20 @@
                             <div class="dropdown-panel">
                                 <a
                                     class="dropdown-link"
-                                    href={$page.props.auth.user.user_type === 'job_seeker'
-                                        ? '/job-seeker/dashboard'
-                                        : '/employer/dashboard'}
+                                    href={getDashboardHref($page.props.auth.user.user_type)}
                                 >
                                     <i class="bi bi-speedometer2"></i>
                                     Dashboard
                                 </a>
-                                <a
-                                    class="dropdown-link"
-                                    href={$page.props.auth.user.user_type === 'job_seeker'
-                                        ? '/job-seeker/profile'
-                                        : '/employer/profile'}
-                                >
-                                    <i class="bi bi-person"></i>
-                                    Profile
-                                </a>
+                                {#if $page.props.auth.user.user_type !== 'admin'}
+                                    <a
+                                        class="dropdown-link"
+                                        href={getProfileHref($page.props.auth.user.user_type)}
+                                    >
+                                        <i class="bi bi-person"></i>
+                                        Profile
+                                    </a>
+                                {/if}
                                 <div class="dropdown-divider"></div>
                                 <button class="dropdown-link" on:click={logout}>
                                     <i class="bi bi-box-arrow-right"></i>
@@ -147,6 +170,8 @@
                         <a href="/employer/applications" class="mobile-link">Applications</a>
                         <a href="/employer/dashboard" class="mobile-link">Dashboard</a>
                         <a href="/employer/profile" class="mobile-link">Profile</a>
+                    {:else if $page.props.auth.user.user_type === 'admin'}
+                        <a href="/admin/dashboard" class="mobile-link">Admin Panel</a>
                     {/if}
                     <button class="mobile-link" on:click={logout}>Logout</button>
                 {:else}

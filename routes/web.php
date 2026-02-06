@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\EmployerProfileController;
 use App\Http\Controllers\FavoriteController;
@@ -74,6 +75,14 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/jobs/{listing}/publish', [JobListingController::class, 'publish'])->name('jobs.publish');
         Route::post('/jobs/{listing}/close', [JobListingController::class, 'close'])->name('jobs.close');
         Route::delete('/jobs/{listing}', [JobListingController::class, 'destroy'])->name('jobs.destroy');
+    });
+
+    // Admin routes
+    Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/users', [AdminController::class, 'users'])->name('users');
+        Route::get('/jobs', [AdminController::class, 'jobListings'])->name('jobs');
+        Route::get('/applications', [AdminController::class, 'applications'])->name('applications');
     });
 
     // Applications routes (both job seekers and employers)

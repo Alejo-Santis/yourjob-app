@@ -4,17 +4,19 @@
     import Sidebar from './Sidebar.svelte';
     import Footer from './Footer.svelte';
     import Toast from '../Components/Toast.svelte';
+
+    $: isAuthenticated = $page.props.auth?.user;
 </script>
 
 <div class="app-layout">
     <Navigation />
 
     <div class="layout-container">
-        {#if $page.props.auth?.user}
+        {#if isAuthenticated}
             <Sidebar userType={$page.props.auth.user.user_type} />
         {/if}
 
-        <main class="main-content">
+        <main class="main-content" class:with-sidebar={isAuthenticated}>
             <slot />
         </main>
     </div>
@@ -35,7 +37,6 @@
     .layout-container {
         display: flex;
         flex: 1;
-        gap: 1px;
     }
 
     .main-content {
@@ -44,9 +45,17 @@
         overflow-y: auto;
     }
 
+    .main-content.with-sidebar {
+        margin-left: 250px;
+    }
+
     @media (max-width: 768px) {
         .main-content {
             padding: 1rem;
+        }
+
+        .main-content.with-sidebar {
+            margin-left: 0;
         }
     }
 </style>
