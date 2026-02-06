@@ -67,12 +67,21 @@
 
                         <!-- Featured Companies -->
                         <div class="featured-companies mt-5">
-                            <p class="featured-label">Featured by:</p>
+                            <p class="featured-label">
+                                <i class="bi bi-star-fill text-warning"></i>
+                                Featured by:
+                            </p>
                             <div class="company-logos">
-                                <span class="company-logo">Microsoft</span>
-                                <span class="company-logo">Google</span>
-                                <span class="company-logo">Amazon</span>
-                                <span class="company-logo">Apple</span>
+                                <span class="company-logo">
+                                    <i class="bi bi-receipt"></i>
+                                    Nextpyme Colombia SAS
+                                </span>
+                                <span class="company-logo">
+                                    <i class="bi bi-envelope-check"></i>
+                                    RelayNx</span>
+                                <span class="company-logo">
+                                    <i class="bi bi-filetype-php"></i>
+                                    SantiNet SAS</span>
                             </div>
                         </div>
                     </div>

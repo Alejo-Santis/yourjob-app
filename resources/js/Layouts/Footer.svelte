@@ -11,9 +11,7 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="footer-brand">
                         <div class="brand-logo">
-                            <div class="logo-icon">
-                                <i class="bi bi-briefcase-fill"></i>
-                            </div>
+                            <img src="/assets/logos/logo-2.png" alt="YourJob" class="logo-img" />
                             <span class="logo-text">YourJob</span>
                         </div>
                         <p class="brand-description">
@@ -135,16 +133,10 @@
         margin-bottom: 1.5rem;
     }
 
-    .logo-icon {
-        width: 48px;
-        height: 48px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 1.25rem;
+    .logo-img {
+        height: 42px;
+        width: auto;
+        object-fit: contain;
     }
 
     .logo-text {
@@ -289,10 +281,8 @@
             margin-bottom: 1rem;
         }
 
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            font-size: 1.125rem;
+        .logo-img {
+            height: 36px;
         }
 
         .logo-text {
