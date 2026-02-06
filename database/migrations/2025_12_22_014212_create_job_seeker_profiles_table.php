@@ -23,6 +23,7 @@ return new class extends Migration
             $table->enum('type_of_identification', ['citizenship_card', 'nit', 'work_permit','passport', 'national_id', 'driver_license'])->nullable();
 
             // Contact Information
+            $table->string('email')->nullable();
             $table->string('phone', 20)->nullable();
             $table->string('alternate_phone', 20)->nullable();
             $table->text('address')->nullable();
@@ -65,7 +66,7 @@ return new class extends Migration
             $table->json('certifications')->nullable();
 
             // Profile Status
-            $table->integer('profile_completeness')->default(0);
+            $table->integer('profile_completion_percentage')->default(0);
             $table->boolean('is_public')->default(true);
             $table->boolean('accepts_recommendations')->default(true);
 
@@ -77,7 +78,7 @@ return new class extends Migration
 
             // Indexes
             $table->index('city');
-            $table->index('profile_completeness');
+            $table->index('profile_completion_percentage');
         });
     }
 

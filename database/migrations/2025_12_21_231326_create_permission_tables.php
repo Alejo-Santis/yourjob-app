@@ -56,7 +56,6 @@ return new class extends Migration
             $table->string('model_type');
 
             $table->unsignedBigInteger($pivotPermission);
-            $table->unsignedBigInteger($columnNames['model_morph_key']);
             $table->index([$columnNames['model_morph_key'], 'model_type'], 'model_has_permissions_model_id_model_type_index');
 
             $table->foreign($pivotPermission)
@@ -83,7 +82,6 @@ return new class extends Migration
 
             $table->unsignedBigInteger($pivotRole);
 
-            $table->unsignedBigInteger($columnNames['model_morph_key']);
             $table->index([$columnNames['model_morph_key'], 'model_type'], 'model_has_roles_model_id_model_type_index');
 
             $table->foreign($pivotRole)

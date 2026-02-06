@@ -5,6 +5,34 @@
     export let isFavorited = false;
     export let isApplied = false;
     export let matchScore = null;
+
+    function getContractBadgeColor(type) {
+        const colors = {
+            full_time: 'primary',
+            part_time: 'info',
+            freelance: 'warning',
+            internship: 'secondary',
+            temporary: 'danger',
+            contract: 'success',
+        };
+        return colors[type] || 'secondary';
+    }
+
+    function getWorkModeBadgeColor(mode) {
+        const colors = {
+            on_site: 'secondary',
+            remote: 'success',
+            hybrid: 'info',
+        };
+        return colors[mode] || 'secondary';
+    }
+
+    function getMatchBadgeColor(score) {
+        if (score >= 80) return 'success';
+        if (score >= 60) return 'info';
+        if (score >= 40) return 'warning';
+        return 'danger';
+    }
 </script>
 
 <div class="job-card card h-100 shadow-sm hover-shadow transition-all">
@@ -115,33 +143,3 @@
         transform: scale(1.2);
     }
 </style>
-
-<script>
-    function getContractBadgeColor(type) {
-        const colors = {
-            full_time: 'primary',
-            part_time: 'info',
-            freelance: 'warning',
-            internship: 'secondary',
-            temporary: 'danger',
-            contract: 'success',
-        };
-        return colors[type] || 'secondary';
-    }
-
-    function getWorkModeBadgeColor(mode) {
-        const colors = {
-            on_site: 'secondary',
-            remote: 'success',
-            hybrid: 'info',
-        };
-        return colors[mode] || 'secondary';
-    }
-
-    function getMatchBadgeColor(score) {
-        if (score >= 80) return 'success';
-        if (score >= 60) return 'info';
-        if (score >= 40) return 'warning';
-        return 'danger';
-    }
-</script>

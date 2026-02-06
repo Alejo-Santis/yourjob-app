@@ -1,0 +1,309 @@
+<script>
+    import AppLayout from '../../../Layouts/AppLayout.svelte';
+    import { useForm } from '@inertiajs/svelte';
+
+    export let profile = {};
+
+    const form = useForm({
+        full_name: profile.full_name || '',
+        birth_date: profile.birth_date || '',
+        gender: profile.gender || '',
+        phone: profile.phone || '',
+        address: profile.address || '',
+        city: profile.city || '',
+        state: profile.state || '',
+        country: profile.country || '',
+        postal_code: profile.postal_code || '',
+        education_level: profile.education_level || '',
+        profession: profile.profession || '',
+        total_years_experience: profile.total_years_experience || 0,
+        expected_salary_min: profile.expected_salary_min || '',
+        expected_salary_max: profile.expected_salary_max || '',
+        preferred_contract_type: profile.preferred_contract_type || '',
+        preferred_work_mode: profile.preferred_work_mode || '',
+    });
+
+    function submit(e) {
+        e.preventDefault();
+        $form.put('/job-seeker/profile');
+    }
+</script>
+
+<AppLayout>
+    <div class="profile-edit-container">
+        <div class="mb-4">
+            <h1 class="h2 mb-1">Edit Profile</h1>
+            <p class="text-muted">Update your professional information</p>
+        </div>
+
+        <form on:submit={submit}>
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- Personal Information -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Personal Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="full_name" class="form-label">Full Name *</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="full_name"
+                                        bind:value={$form.full_name}
+                                        required
+                                    />
+                                    {#if $form.errors.full_name}
+                                        <div class="text-danger small mt-1">{$form.errors.full_name}</div>
+                                    {/if}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="birth_date" class="form-label">Birth Date</label>
+                                    <input
+                                        type="date"
+                                        class="form-control"
+                                        id="birth_date"
+                                        bind:value={$form.birth_date}
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="gender" class="form-label">Gender</label>
+                                    <select class="form-select" id="gender" bind:value={$form.gender}>
+                                        <option value="">Select gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="other">Other</option>
+                                        <option value="prefer_not_to_say">Prefer not to say</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="phone" class="form-label">Phone</label>
+                                    <input
+                                        type="tel"
+                                        class="form-control"
+                                        id="phone"
+                                        bind:value={$form.phone}
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Address</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="address"
+                                    bind:value={$form.address}
+                                />
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="city" class="form-label">City</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="city"
+                                        bind:value={$form.city}
+                                    />
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="state" class="form-label">State</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="state"
+                                        bind:value={$form.state}
+                                    />
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="postal_code" class="form-label">Postal Code</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="postal_code"
+                                        bind:value={$form.postal_code}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Professional Information -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Professional Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="profession" class="form-label">Profession</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="profession"
+                                        bind:value={$form.profession}
+                                        placeholder="e.g., Software Engineer"
+                                    />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="education_level" class="form-label">Education Level</label>
+                                    <select class="form-select" id="education_level" bind:value={$form.education_level}>
+                                        <option value="">Select education level</option>
+                                        <option value="high_school">High School</option>
+                                        <option value="associate">Associate Degree</option>
+                                        <option value="bachelor">Bachelor's Degree</option>
+                                        <option value="master">Master's Degree</option>
+                                        <option value="doctorate">Doctorate</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="total_years_experience" class="form-label">
+                                    Years of Experience
+                                </label>
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    id="total_years_experience"
+                                    bind:value={$form.total_years_experience}
+                                    min="0"
+                                />
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="expected_salary_min" class="form-label">
+                                        Expected Salary (Min)
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            id="expected_salary_min"
+                                            bind:value={$form.expected_salary_min}
+                                            min="0"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="expected_salary_max" class="form-label">
+                                        Expected Salary (Max)
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            id="expected_salary_max"
+                                            bind:value={$form.expected_salary_max}
+                                            min="0"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="preferred_contract_type" class="form-label">
+                                        Preferred Contract Type
+                                    </label>
+                                    <select class="form-select" id="preferred_contract_type" bind:value={$form.preferred_contract_type}>
+                                        <option value="">Select contract type</option>
+                                        <option value="full_time">Full Time</option>
+                                        <option value="part_time">Part Time</option>
+                                        <option value="freelance">Freelance</option>
+                                        <option value="internship">Internship</option>
+                                        <option value="temporary">Temporary</option>
+                                        <option value="contract">Contract</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="preferred_work_mode" class="form-label">
+                                        Preferred Work Mode
+                                    </label>
+                                    <select class="form-select" id="preferred_work_mode" bind:value={$form.preferred_work_mode}>
+                                        <option value="">Select work mode</option>
+                                        <option value="on_site">On Site</option>
+                                        <option value="remote">Remote</option>
+                                        <option value="hybrid">Hybrid</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card shadow-sm sticky-top" style="top: 20px;">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">Actions</h5>
+                            <div class="d-grid gap-2">
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                    disabled={$form.processing}
+                                >
+                                    {#if $form.processing}
+                                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        Saving...
+                                    {:else}
+                                        <i class="bi bi-check-circle me-2"></i>
+                                        Save Changes
+                                    {/if}
+                                </button>
+                                <a href="/job-seeker/profile" class="btn btn-outline-secondary">
+                                    <i class="bi bi-x-circle me-2"></i>
+                                    Cancel
+                                </a>
+                            </div>
+
+                            <hr class="my-3" />
+
+                            <div class="alert alert-info mb-0">
+                                <small>
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    Complete your profile to get better job matches and increase visibility to employers.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</AppLayout>
+
+<style>
+    .profile-edit-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .card {
+        border: none;
+        border-radius: 0.5rem;
+    }
+
+    .card-header {
+        border-bottom: 1px solid #e9ecef;
+        padding: 1rem 1.25rem;
+    }
+
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .sticky-top {
+        position: sticky;
+    }
+</style>

@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\JobListing;
 use App\Models\EmployerProfile;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Builder;
 
 class JobListingService
 {
@@ -62,7 +62,7 @@ class JobListingService
     /**
      * Search job listings
      */
-    public function search(array $filters): Collection
+    public function search(array $filters): Builder
     {
         $query = JobListing::active();
 
@@ -94,7 +94,7 @@ class JobListingService
             $query->where('salary_min', '<=', $filters['salary_max']);
         }
 
-        return $query->orderBy('posted_at', 'desc')->get();
+        return $query->orderBy('posted_at', 'desc');
     }
 
     /**

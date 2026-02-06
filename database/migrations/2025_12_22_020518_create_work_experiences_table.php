@@ -16,8 +16,8 @@ return new class extends Migration
             $table->uuid('job_seeker_id');
 
             // Job information
-            $table->string('company');
-            $table->string('position');
+            $table->string('company_name');
+            $table->string('job_title');
             $table->string('industry_sector', 100)->nullable();
 
             // Dates

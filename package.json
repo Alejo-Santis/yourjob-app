@@ -19,6 +19,9 @@
     },
     "dependencies": {
         "@inertiajs/vue3": "^2.3.4",
+        "@popperjs/core": "^2.11.8",
+        "bootstrap": "^5.3.3",
+        "bootstrap-icons": "^1.11.3",
         "svelte": "^5.46.0",
         "sweetalert2": "^11.26.16"
     }

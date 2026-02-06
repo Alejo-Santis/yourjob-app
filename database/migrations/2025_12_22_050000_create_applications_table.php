@@ -22,15 +22,15 @@ return new class extends Migration
 
             // Application Status
             $table->enum('status', ['pending', 'accepted', 'rejected', 'withdrawn', 'under_review'])->default('pending');
-
-            // Employer Response
-            $table->text('employer_response')->nullable();
-            $table->dateTime('responded_at')->nullable();
+            $table->text('rejection_message')->nullable();
 
             // Application History
             $table->dateTime('applied_at');
+            $table->dateTime('viewed_at')->nullable();
+            $table->dateTime('accepted_at')->nullable();
+            $table->dateTime('rejected_at')->nullable();
+            $table->dateTime('withdrawn_at')->nullable();
             $table->integer('view_count')->default(0);
-            $table->dateTime('last_viewed_at')->nullable();
 
             // Rating
             $table->integer('candidate_rating')->nullable(); // 1-5 stars

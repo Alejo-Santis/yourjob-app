@@ -1,5 +1,5 @@
 <script>
-    import { page } from '$app/stores';
+    import { page } from '@inertiajs/svelte';
     import Navigation from './Navigation.svelte';
     import Sidebar from './Sidebar.svelte';
     import Footer from './Footer.svelte';

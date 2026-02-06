@@ -1,5 +1,15 @@
 <script>
     export let alert = null;
+
+    function getIcon(type) {
+        const icons = {
+            success: 'check-circle-fill',
+            danger: 'exclamation-circle-fill',
+            warning: 'exclamation-triangle-fill',
+            info: 'info-circle-fill',
+        };
+        return icons[type] || 'info-circle-fill';
+    }
 </script>
 
 {#if alert}
@@ -17,18 +27,6 @@
         ></button>
     </div>
 {/if}
-
-<script>
-    function getIcon(type) {
-        const icons = {
-            success: 'check-circle-fill',
-            danger: 'exclamation-circle-fill',
-            warning: 'exclamation-triangle-fill',
-            info: 'info-circle-fill',
-        };
-        return icons[type] || 'info-circle-fill';
-    }
-</script>
 
 <style>
     .alert {

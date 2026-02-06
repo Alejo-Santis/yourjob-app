@@ -42,14 +42,14 @@ class JobListingController extends Controller
         $user = Auth::user();
 
         // Mark as viewed if it's the employer
-        if ($user->check() && $user->isEmployer()) {
+        if (Auth::check() && $user->isEmployer()) {
             $this->markAsViewed($listing);
         }
 
         $isApplied = false;
         $isFavorited = false;
 
-        if ($user->check() && $user->isJobSeeker()) {
+        if (Auth::check() && $user->isJobSeeker()) {
             $profile = $user->jobSeekerProfile;
             $isApplied = $profile->applications()->where('job_listing_id', $listing->id)->exists();
             $isFavorited = $profile->favorites()->where('job_listing_id', $listing->id)->exists();

@@ -50,6 +50,7 @@ return new class extends Migration
             $table->enum('status', ['draft', 'active', 'closed', 'filled', 'archived'])->default('draft');
             $table->integer('vacancy_count')->default(1);
             $table->integer('applications_count')->default(0);
+            $table->integer('view_count')->default(0);
 
             // Dates
             $table->dateTime('posted_at')->nullable();

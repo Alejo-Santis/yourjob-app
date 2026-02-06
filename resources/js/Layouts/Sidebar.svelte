@@ -1,5 +1,5 @@
 <script>
-    import { page } from '$app/stores';
+    import { page } from '@inertiajs/svelte';
 
     export let userType = 'job_seeker';
 
