@@ -5,7 +5,9 @@
     import Footer from './Footer.svelte';
     import Toast from '../Components/Toast.svelte';
 
-    $: isAuthenticated = $page.props.auth?.user;
+    let { children } = $props();
+
+    let isAuthenticated = $derived($page.props.auth?.user);
 </script>
 
 <div class="app-layout">
@@ -17,7 +19,7 @@
         {/if}
 
         <main class="main-content" class:with-sidebar={isAuthenticated}>
-            <slot />
+            {@render children()}
         </main>
     </div>
 

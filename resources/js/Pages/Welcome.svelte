@@ -905,9 +905,11 @@
     }
 
     @media (max-width: 768px) {
-        .hero-section { padding: 50px 0 70px; }
-        .hero-title { font-size: 2.25rem; }
-        .hero-description { font-size: 1rem; }
+        .hero-section { padding: 40px 0 60px; }
+        .hero-content { padding: 20px 0; }
+        .hero-label { margin-bottom: 20px; font-size: 0.875rem; }
+        .hero-title { font-size: 2.25rem; margin-bottom: 20px; }
+        .hero-description { font-size: 1rem; margin-bottom: 28px; line-height: 1.7; }
         .search-wrapper { max-width: 100%; }
         .featured-companies { margin-top: 32px !important; }
 
@@ -931,5 +933,56 @@
             padding: 12px 24px !important;
             font-size: 1rem;
         }
+    }
+
+    @media (max-width: 480px) {
+        .hero-section { padding: 24px 0 40px; }
+        .hero-content { padding: 16px 8px; }
+        .hero-label {
+            margin-bottom: 24px;
+            font-size: 0.813rem;
+            padding: 5px 14px;
+        }
+        .hero-title {
+            font-size: 1.75rem;
+            margin-bottom: 24px;
+            line-height: 1.25;
+        }
+        .hero-description {
+            font-size: 0.938rem;
+            margin-bottom: 32px;
+            line-height: 1.75;
+        }
+        .search-wrapper { margin-bottom: 8px; }
+        .search-form {
+            padding: 4px 4px 4px 48px;
+        }
+        .search-btn {
+            width: 36px;
+            height: 36px;
+            font-size: 0.875rem;
+        }
+        .search-input {
+            padding: 10px 12px;
+            font-size: 0.875rem;
+        }
+        .featured-companies { margin-top: 36px !important; }
+        .featured-label { font-size: 0.75rem; margin-bottom: 10px; }
+        .company-logos { gap: 16px; }
+        .company-logo { font-size: 0.813rem; }
+
+        .features-section,
+        .job-seekers-section,
+        .employers-section,
+        .cta-section { padding: 50px 0; }
+
+        .section-title,
+        .content-title,
+        .cta-title { font-size: 1.5rem; }
+
+        .content-description { font-size: 0.938rem; }
+        .feature-list-item { font-size: 0.938rem; padding: 8px 0; }
+        .cta-card { padding: 48px 20px; }
+        .cta-description { font-size: 1rem; }
     }
 </style>

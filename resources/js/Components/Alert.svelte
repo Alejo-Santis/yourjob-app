@@ -1,5 +1,5 @@
 <script>
-    export let alert = null;
+    let { alert = null } = $props();
 
     function getIcon(type) {
         const icons = {

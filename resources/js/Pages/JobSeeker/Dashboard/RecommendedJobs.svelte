@@ -3,7 +3,7 @@
     import JobCard from '../../../Components/JobCard.svelte';
     import { router } from '@inertiajs/svelte';
 
-    export let jobs = { data: [] };
+    let { jobs = { data: [] } } = $props();
 
     function handleApply(jobId) {
         router.post('/applications', { job_listing_id: jobId });
@@ -48,7 +48,7 @@
                                 {#if link.url}
                                     <button
                                         class="page-link"
-                                        on:click={() => router.visit(link.url)}
+                                        onclick={() => router.visit(link.url)}
                                     >
                                         {@html link.label}
                                     </button>

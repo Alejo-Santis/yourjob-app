@@ -1,8 +1,7 @@
 <script>
-    import { useForm } from '@inertiajs/svelte';
-    import { page } from '@inertiajs/svelte';
+    import { useForm, page } from '@inertiajs/svelte';
 
-    export let status = '';
+    let { status = '' } = $props();
 
     const form = useForm({
         email: '',
@@ -46,7 +45,7 @@
                         {/if}
 
                         <!-- Login Form -->
-                        <form on:submit={submit}>
+                        <form onsubmit={submit}>
                             <!-- Email -->
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>

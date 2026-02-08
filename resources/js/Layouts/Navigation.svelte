@@ -1,10 +1,9 @@
 <script>
-    import { page } from '@inertiajs/svelte';
+    import { page, router } from '@inertiajs/svelte';
     import { onMount } from 'svelte';
-    import { router } from '@inertiajs/svelte';
 
-    let isMenuOpen = false;
-    let isProfileOpen = false;
+    let isMenuOpen = $state(false);
+    let isProfileOpen = $state(false);
 
     const toggleMenu = () => {
         isMenuOpen = !isMenuOpen;
@@ -25,10 +24,10 @@
         });
     });
 
-    $: isActive = (path) => {
+    function isActive(path) {
         if (path === '/') return $page.url === '/';
         return $page.url === path || $page.url.startsWith(path + '/');
-    };
+    }
 
     function getDashboardHref(userType) {
         const map = {
@@ -110,7 +109,7 @@
                     <a href="/register" class="action-button">Sign up</a>
                 {:else}
                     <div class="user-dropdown">
-                        <button class="user-button" on:click={toggleProfile}>
+                        <button class="user-button" onclick={toggleProfile}>
                             <i class="bi bi-person-circle"></i>
                             <span class="user-name">{$page.props.auth.user.email.split('@')[0]}</span>
                             <i class="bi bi-chevron-down"></i>
@@ -135,7 +134,7 @@
                                     </a>
                                 {/if}
                                 <div class="dropdown-divider"></div>
-                                <button class="dropdown-link" on:click={logout}>
+                                <button class="dropdown-link" onclick={logout}>
                                     <i class="bi bi-box-arrow-right"></i>
                                     Logout
                                 </button>
@@ -146,7 +145,7 @@
             </div>
 
             <!-- Mobile Menu Button -->
-            <button class="mobile-menu-button d-lg-none" on:click={toggleMenu} aria-label="Toggle menu">
+            <button class="mobile-menu-button d-lg-none" onclick={toggleMenu} aria-label="Toggle menu">
                 <i class="bi bi-{isMenuOpen ? 'x' : 'list'}"></i>
             </button>
         </div>
@@ -171,7 +170,7 @@
                     {:else if $page.props.auth.user.user_type === 'admin'}
                         <a href="/admin/dashboard" class="mobile-link">Admin Panel</a>
                     {/if}
-                    <button class="mobile-link" on:click={logout}>Logout</button>
+                    <button class="mobile-link" onclick={logout}>Logout</button>
                 {:else}
                     <a href="/login" class="mobile-link">Login</a>
                     <a href="/register" class="mobile-button">Sign up</a>

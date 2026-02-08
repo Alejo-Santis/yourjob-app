@@ -1,10 +1,5 @@
 <script>
-    export let job = {};
-    export let onApply = () => {};
-    export let onFavorite = () => {};
-    export let isFavorited = false;
-    export let isApplied = false;
-    export let matchScore = null;
+    let { job = {}, onApply = () => {}, onFavorite = () => {}, isFavorited = false, isApplied = false, matchScore = null } = $props();
 
     function getContractBadgeColor(type) {
         const colors = {
@@ -44,7 +39,7 @@
             </div>
             <button
                 class="btn btn-sm btn-link"
-                on:click={onFavorite}
+                onclick={onFavorite}
                 title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
             >
                 <i class="bi bi-heart{isFavorited ? '-fill' : ''} text-danger"></i>
@@ -97,7 +92,7 @@
                 View Details
             </a>
             {#if !isApplied}
-                <button class="btn btn-primary btn-sm" on:click={onApply}>
+                <button class="btn btn-primary btn-sm" onclick={onApply}>
                     <i class="bi bi-send me-1"></i>
                     Apply Now
                 </button>

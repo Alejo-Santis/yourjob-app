@@ -4,9 +4,7 @@
     import JobCard from '../../../Components/JobCard.svelte';
     import { router, page } from '@inertiajs/svelte';
 
-    export let summary = {};
-    export let recentApplications = [];
-    export let favorites = [];
+    let { summary = {}, recentApplications = [], favorites = [] } = $props();
 
     function handleApply(jobId) {
         router.post('/applications', { job_listing_id: jobId });

@@ -1,26 +1,71 @@
 <script>
     import AppLayout from '../../../Layouts/AppLayout.svelte';
-    import { router } from '@inertiajs/svelte';
+    import { page } from '@inertiajs/svelte';
+    import axios from 'axios';
 
-    export let profile = {};
-    export let summary = {};
+    let { profile, summary } = $props();
+
+    let uploading = $state(false);
+    let uploadError = $state('');
+    let uploadSuccess = $state('');
+
+    let flash = $derived($page.props.flash || {});
+    let pageErrors = $derived($page.props.errors || {});
 
     function handleUploadCV() {
         document.getElementById('cv-upload').click();
     }
 
-    function uploadCV(event) {
+    async function uploadCV(event) {
         const file = event.target.files[0];
-        if (file) {
-            const formData = new FormData();
-            formData.append('cv', file);
-            router.post('/job-seeker/profile/cv', formData);
+        if (!file) return;
+
+        uploadError = '';
+        uploadSuccess = '';
+        uploading = true;
+
+        const formData = new FormData();
+        formData.append('cv', file);
+
+        try {
+            await axios.post('/job-seeker/profile/cv', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            uploading = false;
+            uploadSuccess = 'CV uploaded successfully!';
+            // Reload to show updated profile with CV
+            setTimeout(() => window.location.reload(), 1000);
+        } catch (err) {
+            uploading = false;
+            if (err.response?.status === 422) {
+                uploadError = err.response.data.errors?.cv?.[0] || 'Invalid file. Use PDF, DOC, or DOCX (max 5MB).';
+            } else {
+                uploadError = `Error: ${err.response?.status || 'Network error'}. ${err.response?.data?.message || 'Please try again.'}`;
+            }
+            console.error('Upload error:', err.response?.status, err.response?.data);
         }
+
+        const input = document.getElementById('cv-upload');
+        if (input) input.value = '';
     }
 </script>
 
 <AppLayout>
     <div class="profile-container">
+        <!-- Flash Messages -->
+        {#if flash.success}
+            <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+                <i class="bi bi-check-circle me-2"></i>{flash.success}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+            </div>
+        {/if}
+        {#if flash.error}
+            <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>{flash.error}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+            </div>
+        {/if}
+
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h1 class="h2 mb-1">My Profile</h1>
@@ -64,11 +109,11 @@
                     <div class="card-body">
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label class="text-muted small">Full Name</label>
+                                <label class="text-muted small" for="">Full Name</label>
                                 <p class="mb-0 fw-semibold">{profile.full_name || 'Not provided'}</p>
                             </div>
                             <div class="col-md-6">
-                                <label class="text-muted small">Birth Date</label>
+                                <label class="text-muted small" for="">Birth Date</label>
                                 <p class="mb-0 fw-semibold">
                                     {profile.birth_date ? new Date(profile.birth_date).toLocaleDateString() : 'Not provided'}
                                 </p>
@@ -76,17 +121,17 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label class="text-muted small">Gender</label>
+                                <label class="text-muted small" for="">Gender</label>
                                 <p class="mb-0 fw-semibold">{profile.gender || 'Not provided'}</p>
                             </div>
                             <div class="col-md-6">
-                                <label class="text-muted small">Phone</label>
+                                <label class="text-muted small" for="">Phone</label>
                                 <p class="mb-0 fw-semibold">{profile.phone || 'Not provided'}</p>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <label class="text-muted small">Address</label>
+                                <label class="text-muted small" for="">Address</label>
                                 <p class="mb-0 fw-semibold">
                                     {#if profile.address}
                                         {profile.address}, {profile.city}, {profile.state} {profile.postal_code}
@@ -107,21 +152,21 @@
                     <div class="card-body">
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label class="text-muted small">Profession</label>
+                                <label class="text-muted small" for="">Profession</label>
                                 <p class="mb-0 fw-semibold">{profile.profession || 'Not provided'}</p>
                             </div>
                             <div class="col-md-6">
-                                <label class="text-muted small">Education Level</label>
+                                <label class="text-muted small" for="">Education Level</label>
                                 <p class="mb-0 fw-semibold">{profile.education_level || 'Not provided'}</p>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label class="text-muted small">Years of Experience</label>
+                                <label class="text-muted small" for="">Years of Experience</label>
                                 <p class="mb-0 fw-semibold">{profile.total_years_experience || 0} years</p>
                             </div>
                             <div class="col-md-6">
-                                <label class="text-muted small">Expected Salary</label>
+                                <label class="text-muted small" for="">Expected Salary</label>
                                 <p class="mb-0 fw-semibold">
                                     {#if profile.expected_salary_min && profile.expected_salary_max}
                                         ${profile.expected_salary_min.toLocaleString()} - ${profile.expected_salary_max.toLocaleString()}
@@ -133,11 +178,11 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <label class="text-muted small">Preferred Contract Type</label>
+                                <label class="text-muted small" for="">Preferred Contract Type</label>
                                 <p class="mb-0 fw-semibold">{profile.preferred_contract_type || 'Not provided'}</p>
                             </div>
                             <div class="col-md-6">
-                                <label class="text-muted small">Preferred Work Mode</label>
+                                <label class="text-muted small" for="">Preferred Work Mode</label>
                                 <p class="mb-0 fw-semibold">{profile.preferred_work_mode || 'Not provided'}</p>
                             </div>
                         </div>
@@ -227,15 +272,36 @@
                             <i class="bi bi-cloud-upload text-muted" style="font-size: 3rem;"></i>
                             <p class="mb-3 mt-2 text-muted">No CV uploaded</p>
                         {/if}
-                        <button class="btn btn-primary btn-sm w-100" on:click={handleUploadCV}>
-                            <i class="bi bi-upload me-2"></i>Upload New CV
+                        {#if uploadSuccess}
+                            <div class="alert alert-success small py-2 mb-2">
+                                <i class="bi bi-check-circle me-1"></i>{uploadSuccess}
+                            </div>
+                        {/if}
+                        {#if uploadError}
+                            <div class="alert alert-danger small py-2 mb-2">
+                                <i class="bi bi-exclamation-triangle me-1"></i>{uploadError}
+                            </div>
+                        {/if}
+                        {#if pageErrors.cv}
+                            <div class="alert alert-danger small py-2 mb-2">
+                                <i class="bi bi-exclamation-triangle me-1"></i>{pageErrors.cv}
+                            </div>
+                        {/if}
+                        <button class="btn btn-primary btn-sm w-100" onclick={handleUploadCV} disabled={uploading}>
+                            {#if uploading}
+                                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                Uploading...
+                            {:else}
+                                <i class="bi bi-upload me-2"></i>Upload New CV
+                            {/if}
                         </button>
+                        <small class="text-muted d-block mt-2">PDF, DOC, DOCX (max 5MB)</small>
                         <input
                             id="cv-upload"
                             type="file"
                             accept=".pdf,.doc,.docx"
                             style="display: none;"
-                            on:change={uploadCV}
+                            onchange={uploadCV}
                         />
                     </div>
                 </div>

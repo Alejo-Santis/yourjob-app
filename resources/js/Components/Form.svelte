@@ -1,9 +1,12 @@
 <script>
-    export let title = '';
-    export let onSubmit = () => {};
-    export let isLoading = false;
+    let { title = '', onSubmit = () => {}, isLoading = false, children } = $props();
 
     let formElement;
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        onSubmit(e);
+    }
 </script>
 
 <div class="form-container card shadow-sm">
@@ -11,8 +14,8 @@
         <h5 class="card-title mb-0">{title}</h5>
     </div>
     <div class="card-body">
-        <form bind:this={formElement} on:submit|preventDefault={onSubmit}>
-            <slot />
+        <form bind:this={formElement} onsubmit={handleSubmit}>
+            {@render children()}
         </form>
     </div>
 </div>

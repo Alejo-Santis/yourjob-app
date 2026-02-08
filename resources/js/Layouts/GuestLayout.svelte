@@ -2,13 +2,15 @@
     import Navigation from './Navigation.svelte';
     import Footer from './Footer.svelte';
     import Toast from '../Components/Toast.svelte';
+
+    let { children } = $props();
 </script>
 
 <div class="guest-layout">
     <Navigation />
 
     <main class="guest-content">
-        <slot />
+        {@render children()}
     </main>
 
     <Footer />

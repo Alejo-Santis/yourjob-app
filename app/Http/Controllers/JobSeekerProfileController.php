@@ -63,6 +63,11 @@ class JobSeekerProfileController extends Controller
             'expected_salary_max' => 'nullable|numeric|min:0',
             'preferred_contract_type' => 'nullable|string',
             'preferred_work_mode' => 'nullable|string',
+            'skills' => 'nullable|array',
+            'skills.*' => 'string|max:100',
+            'languages' => 'nullable|array',
+            'languages.*' => 'string|max:100',
+            'about_me' => 'nullable|string|max:2000',
         ]);
 
         $profile = Auth::user()->jobSeekerProfile;

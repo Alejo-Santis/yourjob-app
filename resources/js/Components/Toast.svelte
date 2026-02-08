@@ -1,13 +1,11 @@
 <script>
-    import { writable } from 'svelte/store';
-
-    let toasts = writable([]);
+    let toasts = $state([]);
 
     export function addToast(message, type = 'info', duration = 3000) {
         const id = Math.random().toString(36).substr(2, 9);
         const toast = { id, message, type };
 
-        toasts.update((t) => [...t, toast]);
+        toasts = [...toasts, toast];
 
         if (duration > 0) {
             setTimeout(() => removeToast(id), duration);
@@ -17,19 +15,19 @@
     }
 
     export function removeToast(id) {
-        toasts.update((t) => t.filter((toast) => toast.id !== id));
+        toasts = toasts.filter((toast) => toast.id !== id);
     }
 </script>
 
 <div class="toast-container position-fixed top-0 end-0 p-3">
-    {#each $toasts as toast (toast.id)}
+    {#each toasts as toast (toast.id)}
         <div class="toast show" role="alert">
             <div class="toast-header bg-{toast.type}">
                 <strong class="me-auto text-white">Notification</strong>
                 <button
                     type="button"
                     class="btn-close"
-                    on:click={() => removeToast(toast.id)}
+                    onclick={() => removeToast(toast.id)}
                 ></button>
             </div>
             <div class="toast-body">

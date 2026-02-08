@@ -38,7 +38,7 @@
                         </div>
 
                         <!-- Register Form -->
-                        <form on:submit={submit}>
+                        <form onsubmit={submit}>
                             <!-- User Type Selection -->
                             <div class="mb-4">
                                 <label class="form-label fw-semibold">I am a:</label>
