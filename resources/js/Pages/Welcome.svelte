@@ -2,10 +2,10 @@
     import GuestLayout from '../Layouts/GuestLayout.svelte';
     import { page, router } from '@inertiajs/svelte';
 
-    $: isAuthenticated = $page.props.auth?.user;
-    $: userType = $page.props.auth?.user?.user_type;
+    let isAuthenticated = $derived($page.props.auth?.user);
+    let userType = $derived($page.props.auth?.user?.user_type);
 
-    let searchQuery = '';
+    let searchQuery = $state('');
 
     function handleSearch(e) {
         e.preventDefault();
@@ -33,7 +33,7 @@
 
                         <!-- Search Bar -->
                         <div class="search-wrapper">
-                            <form on:submit={handleSearch} class="search-form">
+                            <form onsubmit={handleSearch} class="search-form">
                                 <button type="submit" class="search-btn" aria-label="search">
                                     <i class="bi bi-search"></i>
                                 </button>

@@ -2,11 +2,10 @@
     import AppLayout from '../../../Layouts/AppLayout.svelte';
     import { router } from '@inertiajs/svelte';
 
-    export let users = { data: [], links: [] };
-    export let filters = {};
+    let { users = { data: [], links: [] }, filters = {} } = $props();
 
-    let search = filters.search || '';
-    let typeFilter = filters.type || '';
+    let search = $state(filters.search || '');
+    let typeFilter = $state(filters.type || '');
 
     function applyFilters() {
         const params = {};
@@ -43,22 +42,22 @@
                         class="filter-input"
                         placeholder="Search by email..."
                         bind:value={search}
-                        on:keydown={(e) => e.key === 'Enter' && applyFilters()}
+                        onkeydown={(e) => e.key === 'Enter' && applyFilters()}
                     />
                 </div>
                 <div class="filter-group">
-                    <select class="filter-select" bind:value={typeFilter} on:change={applyFilters}>
+                    <select class="filter-select" bind:value={typeFilter} onchange={applyFilters}>
                         <option value="">All Types</option>
                         <option value="job_seeker">Job Seekers</option>
                         <option value="employer">Employers</option>
                         <option value="admin">Admins</option>
                     </select>
                 </div>
-                <button class="filter-btn" on:click={applyFilters}>
+                <button class="filter-btn" onclick={applyFilters}>
                     <i class="bi bi-search"></i> Search
                 </button>
                 {#if search || typeFilter}
-                    <button class="filter-btn-clear" on:click={clearFilters}>
+                    <button class="filter-btn-clear" onclick={clearFilters}>
                         <i class="bi bi-x-lg"></i> Clear
                     </button>
                 {/if}
@@ -122,7 +121,7 @@
                             <button
                                 class="page-btn"
                                 class:active={link.active}
-                                on:click={() => router.get(link.url)}
+                                onclick={() => router.get(link.url)}
                             >
                                 {@html link.label}
                             </button>

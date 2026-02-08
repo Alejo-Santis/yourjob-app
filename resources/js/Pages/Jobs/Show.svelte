@@ -3,10 +3,19 @@
     import { router } from '@inertiajs/svelte';
     import { page } from '@inertiajs/svelte';
 
-    export let job = {};
-    export let isApplied = false;
-    export let isFavorited = false;
-    export let matchScore = null;
+    let { job = {}, isApplied = false, isFavorited = false, matchScore = null } = $props();
+
+    function parseSkills(value) {
+        if (Array.isArray(value)) return value;
+        if (typeof value === 'string') {
+            try { const parsed = JSON.parse(value); return Array.isArray(parsed) ? parsed : []; }
+            catch { return []; }
+        }
+        return [];
+    }
+
+    let requiredSkills = $derived(parseSkills(job.required_skills));
+    let niceToHaveSkills = $derived(parseSkills(job.nice_to_have_skills));
 
     function handleApply() {
         if ($page.props.auth?.user) {
@@ -66,7 +75,7 @@
                             </div>
                             <button
                                 class="btn btn-link text-danger fs-4"
-                                on:click={handleFavoriteToggle}
+                                onclick={handleFavoriteToggle}
                                 title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
                             >
                                 <i class="bi bi-heart{isFavorited ? '-fill' : ''}"></i>
@@ -125,14 +134,14 @@
                 {/if}
 
                 <!-- Skills -->
-                {#if job.required_skills && job.required_skills.length > 0}
+                {#if requiredSkills.length > 0}
                     <div class="card shadow-sm mb-4">
                         <div class="card-header bg-white">
                             <h5 class="mb-0">Required Skills</h5>
                         </div>
                         <div class="card-body">
                             <div class="d-flex flex-wrap gap-2">
-                                {#each job.required_skills as skill}
+                                {#each requiredSkills as skill}
                                     <span class="badge bg-primary fs-6 px-3 py-2">{skill}</span>
                                 {/each}
                             </div>
@@ -140,14 +149,14 @@
                     </div>
                 {/if}
 
-                {#if job.nice_to_have_skills && job.nice_to_have_skills.length > 0}
+                {#if niceToHaveSkills.length > 0}
                     <div class="card shadow-sm mb-4">
                         <div class="card-header bg-white">
                             <h5 class="mb-0">Nice to Have Skills</h5>
                         </div>
                         <div class="card-body">
                             <div class="d-flex flex-wrap gap-2">
-                                {#each job.nice_to_have_skills as skill}
+                                {#each niceToHaveSkills as skill}
                                     <span class="badge bg-secondary-subtle text-secondary fs-6 px-3 py-2">{skill}</span>
                                 {/each}
                             </div>
@@ -209,12 +218,12 @@
                                     Already Applied
                                 </button>
                             {:else}
-                                <button class="btn btn-primary btn-lg" on:click={handleApply}>
+                                <button class="btn btn-primary btn-lg" onclick={handleApply}>
                                     <i class="bi bi-send me-2"></i>
                                     Apply Now
                                 </button>
                             {/if}
-                            <button class="btn btn-outline-danger" on:click={handleFavoriteToggle}>
+                            <button class="btn btn-outline-danger" onclick={handleFavoriteToggle}>
                                 <i class="bi bi-heart{isFavorited ? '-fill' : ''} me-2"></i>
                                 {isFavorited ? 'Remove from Favorites' : 'Save Job'}
                             </button>

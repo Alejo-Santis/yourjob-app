@@ -34,10 +34,22 @@ class JobMatchingService
     /**
      * Calculate skills match percentage
      */
+    private function ensureArray($value): array
+    {
+        if (is_array($value)) {
+            return $value;
+        }
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            return is_array($decoded) ? $decoded : [];
+        }
+        return [];
+    }
+
     private function calculateSkillsMatch(JobSeekerProfile $seeker, JobListing $listing): int
     {
-        $requiredSkills = $listing->required_skills ?? [];
-        $seekerSkills = $seeker->skills ?? [];
+        $requiredSkills = $this->ensureArray($listing->required_skills);
+        $seekerSkills = $this->ensureArray($seeker->skills);
 
         if (empty($requiredSkills)) {
             return 100;

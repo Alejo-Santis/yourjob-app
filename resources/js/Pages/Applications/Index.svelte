@@ -2,9 +2,7 @@
     import AppLayout from '../../Layouts/AppLayout.svelte';
     import { router } from '@inertiajs/svelte';
 
-    export let applications = { data: [] };
-    export let userType = 'job_seeker';
-    export let status = null;
+    let { applications = { data: [] }, userType = 'job_seeker', status = null } = $props();
 
     function getStatusColor(appStatus) {
         const colors = {
@@ -138,7 +136,7 @@
                                 {#if link.url}
                                     <button
                                         class="page-link"
-                                        on:click={() => router.visit(link.url)}
+                                        onclick={() => router.visit(link.url)}
                                     >
                                         {@html link.label}
                                     </button>

@@ -40,7 +40,7 @@
                         <h6 class="column-title">For Job Seekers</h6>
                         <ul class="footer-links">
                             <li><a href="/jobs" class="footer-link">Browse Jobs</a></li>
-                            <li><a href="/favorites" class="footer-link">Saved Jobs</a></li>
+                            <li><a href="/job-seeker/favorites" class="footer-link">Saved Jobs</a></li>
                             <li><a href="/applications" class="footer-link">Applications</a></li>
                             <li><a href="/register" class="footer-link">Sign Up</a></li>
                         </ul>

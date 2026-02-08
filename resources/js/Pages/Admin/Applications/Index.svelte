@@ -2,10 +2,9 @@
     import AppLayout from '../../../Layouts/AppLayout.svelte';
     import { router } from '@inertiajs/svelte';
 
-    export let applications = { data: [], links: [] };
-    export let filters = {};
+    let { applications = { data: [], links: [] }, filters = {} } = $props();
 
-    let statusFilter = filters.status || '';
+    let statusFilter = $state(filters.status || '');
 
     function applyFilters() {
         const params = {};
@@ -40,7 +39,7 @@
         <div class="filters-card">
             <div class="filters-row">
                 <div class="filter-group">
-                    <select class="filter-select" bind:value={statusFilter} on:change={applyFilters}>
+                    <select class="filter-select" bind:value={statusFilter} onchange={applyFilters}>
                         <option value="">All Status</option>
                         <option value="pending">Pending</option>
                         <option value="accepted">Accepted</option>
@@ -49,7 +48,7 @@
                     </select>
                 </div>
                 {#if statusFilter}
-                    <button class="filter-btn-clear" on:click={clearFilters}>
+                    <button class="filter-btn-clear" onclick={clearFilters}>
                         <i class="bi bi-x-lg"></i> Clear
                     </button>
                 {/if}
@@ -106,7 +105,7 @@
                 <div class="pagination-bar">
                     {#each applications.links as link}
                         {#if link.url}
-                            <button class="page-btn" class:active={link.active} on:click={() => router.get(link.url)}>
+                            <button class="page-btn" class:active={link.active} onclick={() => router.get(link.url)}>
                                 {@html link.label}
                             </button>
                         {:else}

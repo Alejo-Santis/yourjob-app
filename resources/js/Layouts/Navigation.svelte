@@ -72,7 +72,7 @@
                 {#if $page.props.auth?.user}
                     {#if $page.props.auth.user.user_type === 'job_seeker'}
                         <li class="menu-item">
-                            <a href="/favorites" class="menu-link" class:active={isActive('/favorites')}>
+                            <a href="/job-seeker/favorites" class="menu-link" class:active={isActive('/job-seeker/favorites')}>
                                 Favorites
                             </a>
                         </li>
@@ -158,7 +158,7 @@
 
                 {#if $page.props.auth?.user}
                     {#if $page.props.auth.user.user_type === 'job_seeker'}
-                        <a href="/favorites" class="mobile-link">Favorites</a>
+                        <a href="/job-seeker/favorites" class="mobile-link">Favorites</a>
                         <a href="/applications" class="mobile-link">Applications</a>
                         <a href="/job-seeker/dashboard" class="mobile-link">Dashboard</a>
                         <a href="/job-seeker/profile" class="mobile-link">Profile</a>

@@ -48,7 +48,7 @@
     }
 
     .main-content.with-sidebar {
-        margin-left: 250px;
+        margin-left: 265px;
     }
 
     @media (max-width: 768px) {

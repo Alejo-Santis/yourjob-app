@@ -2,7 +2,7 @@
     import AppLayout from '../../../Layouts/AppLayout.svelte';
     import { useForm } from '@inertiajs/svelte';
 
-    export let profile = {};
+    let { profile = {} } = $props();
 
     const form = useForm({
         company_name: profile.company_name || '',
@@ -33,10 +33,9 @@
             <p class="text-muted">Update your company information</p>
         </div>
 
-        <form on:submit={submit}>
+        <form onsubmit={submit}>
             <div class="row">
                 <div class="col-lg-8">
-                    <!-- Company Information -->
                     <div class="card shadow-sm mb-4">
                         <div class="card-header bg-white">
                             <h5 class="mb-0">Company Information</h5>
@@ -44,40 +43,17 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <label for="company_name" class="form-label">Company Name *</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="company_name"
-                                    bind:value={$form.company_name}
-                                    required
-                                />
-                                {#if $form.errors.company_name}
-                                    <div class="text-danger small mt-1">{$form.errors.company_name}</div>
-                                {/if}
+                                <input type="text" class="form-control" id="company_name" bind:value={$form.company_name} required />
+                                {#if $form.errors.company_name}<div class="text-danger small mt-1">{$form.errors.company_name}</div>{/if}
                             </div>
-
                             <div class="mb-3">
                                 <label for="company_website" class="form-label">Company Website</label>
-                                <input
-                                    type="url"
-                                    class="form-control"
-                                    id="company_website"
-                                    bind:value={$form.company_website}
-                                    placeholder="https://example.com"
-                                />
+                                <input type="url" class="form-control" id="company_website" bind:value={$form.company_website} placeholder="https://example.com" />
                             </div>
-
                             <div class="mb-3">
                                 <label for="company_description" class="form-label">Company Description</label>
-                                <textarea
-                                    class="form-control"
-                                    id="company_description"
-                                    rows="5"
-                                    bind:value={$form.company_description}
-                                    placeholder="Tell us about your company..."
-                                ></textarea>
+                                <textarea class="form-control" id="company_description" rows="5" bind:value={$form.company_description} placeholder="Tell us about your company..."></textarea>
                             </div>
-
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="industry" class="form-label">Industry</label>
@@ -96,15 +72,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="phone" class="form-label">Phone</label>
-                                    <input
-                                        type="tel"
-                                        class="form-control"
-                                        id="phone"
-                                        bind:value={$form.phone}
-                                    />
+                                    <input type="tel" class="form-control" id="phone" bind:value={$form.phone} />
                                 </div>
                             </div>
-
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="company_size" class="form-label">Company Size</label>
@@ -120,32 +90,16 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="employee_count" class="form-label">Employee Count</label>
-                                    <input
-                                        type="number"
-                                        class="form-control"
-                                        id="employee_count"
-                                        bind:value={$form.employee_count}
-                                        min="0"
-                                    />
+                                    <input type="number" class="form-control" id="employee_count" bind:value={$form.employee_count} min="0" />
                                 </div>
                             </div>
-
                             <div class="mb-3">
                                 <label for="founding_year" class="form-label">Founding Year</label>
-                                <input
-                                    type="number"
-                                    class="form-control"
-                                    id="founding_year"
-                                    bind:value={$form.founding_year}
-                                    min="1900"
-                                    max="2099"
-                                    placeholder="e.g., 2010"
-                                />
+                                <input type="number" class="form-control" id="founding_year" bind:value={$form.founding_year} min="1900" max="2099" placeholder="e.g., 2010" />
                             </div>
                         </div>
                     </div>
 
-                    <!-- Address Information -->
                     <div class="card shadow-sm mb-4">
                         <div class="card-header bg-white">
                             <h5 class="mb-0">Address Information</h5>
@@ -153,41 +107,20 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <label for="address" class="form-label">Address</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="address"
-                                    bind:value={$form.address}
-                                />
+                                <input type="text" class="form-control" id="address" bind:value={$form.address} />
                             </div>
-
                             <div class="row">
                                 <div class="col-md-4">
                                     <label for="city" class="form-label">City</label>
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="city"
-                                        bind:value={$form.city}
-                                    />
+                                    <input type="text" class="form-control" id="city" bind:value={$form.city} />
                                 </div>
                                 <div class="col-md-4">
                                     <label for="state" class="form-label">State</label>
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="state"
-                                        bind:value={$form.state}
-                                    />
+                                    <input type="text" class="form-control" id="state" bind:value={$form.state} />
                                 </div>
                                 <div class="col-md-4">
                                     <label for="postal_code" class="form-label">Postal Code</label>
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="postal_code"
-                                        bind:value={$form.postal_code}
-                                    />
+                                    <input type="text" class="form-control" id="postal_code" bind:value={$form.postal_code} />
                                 </div>
                             </div>
                         </div>
@@ -199,32 +132,20 @@
                         <div class="card-body">
                             <h5 class="card-title mb-3">Actions</h5>
                             <div class="d-grid gap-2">
-                                <button
-                                    type="submit"
-                                    class="btn btn-primary"
-                                    disabled={$form.processing}
-                                >
+                                <button type="submit" class="btn btn-primary" disabled={$form.processing}>
                                     {#if $form.processing}
-                                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                        Saving...
+                                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Saving...
                                     {:else}
-                                        <i class="bi bi-check-circle me-2"></i>
-                                        Save Changes
+                                        <i class="bi bi-check-circle me-2"></i>Save Changes
                                     {/if}
                                 </button>
                                 <a href="/employer/profile" class="btn btn-outline-secondary">
-                                    <i class="bi bi-x-circle me-2"></i>
-                                    Cancel
+                                    <i class="bi bi-x-circle me-2"></i>Cancel
                                 </a>
                             </div>
-
                             <hr class="my-3" />
-
                             <div class="alert alert-info mb-0">
-                                <small>
-                                    <i class="bi bi-info-circle me-2"></i>
-                                    A complete profile helps attract more qualified candidates.
-                                </small>
+                                <small><i class="bi bi-info-circle me-2"></i>A complete profile helps attract more qualified candidates.</small>
                             </div>
                         </div>
                     </div>
@@ -235,27 +156,9 @@
 </AppLayout>
 
 <style>
-    .profile-edit-container {
-        max-width: 1400px;
-        margin: 0 auto;
-    }
-
-    .card {
-        border: none;
-        border-radius: 0.5rem;
-    }
-
-    .card-header {
-        border-bottom: 1px solid #e9ecef;
-        padding: 1rem 1.25rem;
-    }
-
-    .form-label {
-        font-weight: 500;
-        margin-bottom: 0.5rem;
-    }
-
-    .sticky-top {
-        position: sticky;
-    }
+    .profile-edit-container { max-width: 1400px; margin: 0 auto; }
+    .card { border: none; border-radius: 0.5rem; }
+    .card-header { border-bottom: 1px solid #e9ecef; padding: 1rem 1.25rem; }
+    .form-label { font-weight: 500; margin-bottom: 0.5rem; }
+    .sticky-top { position: sticky; }
 </style>

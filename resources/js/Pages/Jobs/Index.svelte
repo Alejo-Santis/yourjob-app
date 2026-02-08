@@ -4,10 +4,9 @@
     import { router } from '@inertiajs/svelte';
     import { page } from '@inertiajs/svelte';
 
-    export let jobs = { data: [] };
-    export let filters = {};
+    let { jobs = { data: [] }, filters = {} } = $props();
 
-    let searchForm = {
+    let searchForm = $state({
         title: filters.title || '',
         work_mode: filters.work_mode || '',
         contract_type: filters.contract_type || '',
@@ -16,9 +15,10 @@
         industry: filters.industry || '',
         salary_min: filters.salary_min || '',
         salary_max: filters.salary_max || '',
-    };
+    });
 
-    function search() {
+    function search(e) {
+        e.preventDefault();
         const params = Object.fromEntries(
             Object.entries(searchForm).filter(([_, value]) => value !== '')
         );
@@ -66,7 +66,7 @@
         <!-- Search & Filters -->
         <div class="card shadow-sm mb-4">
             <div class="card-body">
-                <form on:submit|preventDefault={search}>
+                <form onsubmit={search}>
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <input
@@ -136,7 +136,7 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-search me-2"></i>Search
                         </button>
-                        <button type="button" class="btn btn-outline-secondary" on:click={clearFilters}>
+                        <button type="button" class="btn btn-outline-secondary" onclick={clearFilters}>
                             <i class="bi bi-x-circle me-2"></i>Clear Filters
                         </button>
                     </div>
@@ -176,7 +176,7 @@
                                 {#if link.url}
                                     <button
                                         class="page-link"
-                                        on:click={() => router.visit(link.url)}
+                                        onclick={() => router.visit(link.url)}
                                     >
                                         {@html link.label}
                                     </button>
@@ -196,7 +196,7 @@
                     <p class="text-muted mb-4">
                         Try adjusting your search filters to find more opportunities
                     </p>
-                    <button class="btn btn-primary" on:click={clearFilters}>
+                    <button class="btn btn-primary" onclick={clearFilters}>
                         <i class="bi bi-x-circle me-2"></i>Clear Filters
                     </button>
                 </div>

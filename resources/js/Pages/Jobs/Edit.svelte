@@ -2,7 +2,7 @@
     import AppLayout from '../../Layouts/AppLayout.svelte';
     import { useForm } from '@inertiajs/svelte';
 
-    export let job = {};
+    let { job = {} } = $props();
 
     const form = useForm({
         title: job.title || '',
@@ -28,8 +28,8 @@
         deadline_at: job.deadline_at || '',
     });
 
-    let skillInput = '';
-    let niceSkillInput = '';
+    let skillInput = $state('');
+    let niceSkillInput = $state('');
 
     function addSkill() {
         if (skillInput.trim()) {
@@ -66,7 +66,7 @@
             <p class="text-muted">Update your job listing information</p>
         </div>
 
-        <form on:submit={submit}>
+        <form onsubmit={submit}>
             <div class="row">
                 <div class="col-lg-8">
                     <!-- Basic Information -->
@@ -293,9 +293,9 @@
                                         class="form-control"
                                         bind:value={skillInput}
                                         placeholder="Add a required skill..."
-                                        on:keypress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())}
+                                        onkeypress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())}
                                     />
-                                    <button type="button" class="btn btn-primary" on:click={addSkill}>
+                                    <button type="button" class="btn btn-primary" onclick={addSkill}>
                                         <i class="bi bi-plus-circle"></i> Add
                                     </button>
                                 </div>
@@ -309,7 +309,7 @@
                                                 type="button"
                                                 class="btn-close btn-close-white ms-2"
                                                 style="font-size: 0.7rem;"
-                                                on:click={() => removeSkill(index)}
+                                                onclick={() => removeSkill(index)}
                                             ></button>
                                         </span>
                                     {/each}
@@ -330,9 +330,9 @@
                                         class="form-control"
                                         bind:value={niceSkillInput}
                                         placeholder="Add a nice to have skill..."
-                                        on:keypress={(e) => e.key === 'Enter' && (e.preventDefault(), addNiceSkill())}
+                                        onkeypress={(e) => e.key === 'Enter' && (e.preventDefault(), addNiceSkill())}
                                     />
-                                    <button type="button" class="btn btn-secondary" on:click={addNiceSkill}>
+                                    <button type="button" class="btn btn-secondary" onclick={addNiceSkill}>
                                         <i class="bi bi-plus-circle"></i> Add
                                     </button>
                                 </div>
@@ -346,7 +346,7 @@
                                                 type="button"
                                                 class="btn-close btn-close-white ms-2"
                                                 style="font-size: 0.7rem;"
-                                                on:click={() => removeNiceSkill(index)}
+                                                onclick={() => removeNiceSkill(index)}
                                             ></button>
                                         </span>
                                     {/each}

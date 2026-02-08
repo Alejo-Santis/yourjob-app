@@ -2,11 +2,10 @@
     import AppLayout from '../../../Layouts/AppLayout.svelte';
     import { router } from '@inertiajs/svelte';
 
-    export let jobs = { data: [], links: [] };
-    export let filters = {};
+    let { jobs = { data: [], links: [] }, filters = {} } = $props();
 
-    let search = filters.search || '';
-    let statusFilter = filters.status || '';
+    let search = $state(filters.search || '');
+    let statusFilter = $state(filters.status || '');
 
     function applyFilters() {
         const params = {};
@@ -43,11 +42,11 @@
                         class="filter-input"
                         placeholder="Search by title..."
                         bind:value={search}
-                        on:keydown={(e) => e.key === 'Enter' && applyFilters()}
+                        onkeydown={(e) => e.key === 'Enter' && applyFilters()}
                     />
                 </div>
                 <div class="filter-group">
-                    <select class="filter-select" bind:value={statusFilter} on:change={applyFilters}>
+                    <select class="filter-select" bind:value={statusFilter} onchange={applyFilters}>
                         <option value="">All Status</option>
                         <option value="active">Active</option>
                         <option value="draft">Draft</option>
@@ -55,11 +54,11 @@
                         <option value="filled">Filled</option>
                     </select>
                 </div>
-                <button class="filter-btn" on:click={applyFilters}>
+                <button class="filter-btn" onclick={applyFilters}>
                     <i class="bi bi-search"></i> Search
                 </button>
                 {#if search || statusFilter}
-                    <button class="filter-btn-clear" on:click={clearFilters}>
+                    <button class="filter-btn-clear" onclick={clearFilters}>
                         <i class="bi bi-x-lg"></i> Clear
                     </button>
                 {/if}
@@ -117,7 +116,7 @@
                 <div class="pagination-bar">
                     {#each jobs.links as link}
                         {#if link.url}
-                            <button class="page-btn" class:active={link.active} on:click={() => router.get(link.url)}>
+                            <button class="page-btn" class:active={link.active} onclick={() => router.get(link.url)}>
                                 {@html link.label}
                             </button>
                         {:else}

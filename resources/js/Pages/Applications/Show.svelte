@@ -3,11 +3,11 @@
     import { router } from '@inertiajs/svelte';
     import { page } from '@inertiajs/svelte';
 
-    export let application = {};
+    let { application = {} } = $props();
 
-    $: userType = $page.props.auth?.user?.user_type;
-    $: isEmployer = userType === 'employer';
-    $: isJobSeeker = userType === 'job_seeker';
+    let userType = $derived($page.props.auth?.user?.user_type);
+    let isEmployer = $derived(userType === 'employer');
+    let isJobSeeker = $derived(userType === 'job_seeker');
 
     function handleAccept() {
         if (confirm('Are you sure you want to accept this application?')) {
@@ -205,18 +205,18 @@
 
                         {#if isEmployer && application.status === 'pending'}
                             <div class="d-grid gap-2">
-                                <button class="btn btn-success" on:click={handleAccept}>
+                                <button class="btn btn-success" onclick={handleAccept}>
                                     <i class="bi bi-check-circle me-2"></i>
                                     Accept Application
                                 </button>
-                                <button class="btn btn-danger" on:click={handleReject}>
+                                <button class="btn btn-danger" onclick={handleReject}>
                                     <i class="bi bi-x-circle me-2"></i>
                                     Reject Application
                                 </button>
                             </div>
                         {:else if isJobSeeker && application.status === 'pending'}
                             <div class="d-grid gap-2">
-                                <button class="btn btn-outline-danger" on:click={handleWithdraw}>
+                                <button class="btn btn-outline-danger" onclick={handleWithdraw}>
                                     <i class="bi bi-x-circle me-2"></i>
                                     Withdraw Application
                                 </button>

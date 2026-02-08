@@ -1,43 +1,27 @@
 <script>
-    import { page } from "@inertiajs/svelte";
+    import { page, router } from "@inertiajs/svelte";
 
     let { userType = "job_seeker" } = $props();
 
     const jobSeekerItems = [
         { label: "Browse Jobs", href: "/jobs", icon: "search" },
-        { label: "My Favorites", href: "/favorites", icon: "heart" },
-        { label: "Applications", href: "/applications", icon: "file-earmark" },
-        { label: "Profile", href: "/job-seeker/profile", icon: "person" },
+        { label: "My Favorites", href: "/job-seeker/favorites", icon: "heart-fill" },
+        { label: "Applications", href: "/applications", icon: "file-earmark-text" },
+        { label: "Profile", href: "/job-seeker/profile", icon: "person-badge" },
     ];
 
     const employerItems = [
-        {
-            label: "Post Job",
-            href: "/employer/jobs/create",
-            icon: "plus-circle",
-        },
-        {
-            label: "My Listings",
-            href: "/employer/listings",
-            icon: "list-check",
-        },
-        {
-            label: "Applications",
-            href: "/employer/applications",
-            icon: "inbox",
-        },
-        { label: "Analytics", href: "/employer/analytics", icon: "graph-up" },
-        { label: "Profile", href: "/employer/profile", icon: "person" },
+        { label: "Post Job", href: "/employer/jobs/create", icon: "plus-circle-fill" },
+        { label: "My Listings", href: "/employer/listings", icon: "list-columns-reverse" },
+        { label: "Applications", href: "/employer/applications", icon: "inbox-fill" },
+        { label: "Analytics", href: "/employer/analytics", icon: "bar-chart-line-fill" },
+        { label: "Profile", href: "/employer/profile", icon: "building" },
     ];
 
     const adminItems = [
-        { label: "Users", href: "/admin/users", icon: "people" },
-        { label: "Job Listings", href: "/admin/jobs", icon: "briefcase" },
-        {
-            label: "Applications",
-            href: "/admin/applications",
-            icon: "file-earmark-text",
-        },
+        { label: "Users", href: "/admin/users", icon: "people-fill" },
+        { label: "Job Listings", href: "/admin/jobs", icon: "briefcase-fill" },
+        { label: "Applications", href: "/admin/applications", icon: "file-earmark-text-fill" },
     ];
 
     const itemsMap = {
@@ -48,54 +32,84 @@
 
     let items = $derived(itemsMap[userType] || jobSeekerItems);
 
-    // El dashboard se maneja aparte para la separación visual
     const dashboardHref = `/${userType.replace("_", "-")}/dashboard`;
+
+    const userLabel = $derived(() => {
+        const labels = { job_seeker: "Job Seeker", employer: "Employer", admin: "Admin" };
+        return labels[userType] || "User";
+    });
+
+    function logout() {
+        router.post('/logout');
+    }
 </script>
 
-<aside class="sidebar bg-white border-end d-flex flex-column">
-    <div class="sidebar-content flex-grow-1">
-        <nav class="nav flex-column px-3 mb-4">
-            <a
-                href={dashboardHref}
-                class="nav-link"
-                class:active={$page.url === dashboardHref}
-            >
-                <i class="bi bi-speedometer2"></i>
-                <span>Dashboard</span>
-            </a>
-        </nav>
-
-        <p class="sidebar-label">GESTIÓN Y EXPLORACIÓN</p>
-
-        <nav class="nav flex-column px-3">
-            {#each items as item (item.label)}
-                <a
-                    href={item.href}
-                    class="nav-link mb-1"
-                    class:active={$page.url === item.href ||
-                        $page.url.startsWith(item.href)}
-                >
-                    <i class="bi bi-{item.icon}"></i>
-                    <span>{item.label}</span>
-                </a>
-            {/each}
-        </nav>
+<aside class="sidebar d-flex flex-column">
+    <!-- User Profile Section -->
+    <div class="sidebar-profile">
+        <div class="profile-avatar">
+            <i class="bi bi-person-fill"></i>
+        </div>
+        <div class="profile-info">
+            <p class="profile-name">{$page.props.auth?.user?.email?.split('@')[0] || 'User'}</p>
+            <span class="profile-role">{userLabel()}</span>
+        </div>
     </div>
 
-    <div class="sidebar-footer p-3">
-        <div class="version-card">
-            <div class="d-flex align-items-center mb-2">
-                <div class="version-badge">v1.0.4</div>
-                <span class="ms-2 status-dot"></span>
-                <span class="status-text">Online</span>
-            </div>
-            <p class="mb-0 small text-muted">YourJob Pro Platform</p>
+    <!-- Navigation Content -->
+    <div class="sidebar-content flex-grow-1">
+        <!-- Dashboard Link -->
+        <div class="nav-section">
+            <p class="section-label">MAIN</p>
+            <nav class="nav flex-column">
+                <a
+                    href={dashboardHref}
+                    class="nav-link"
+                    class:active={$page.url === dashboardHref}
+                >
+                    <div class="nav-icon">
+                        <i class="bi bi-grid-1x2-fill"></i>
+                    </div>
+                    <span>Dashboard</span>
+                </a>
+            </nav>
         </div>
 
-        <button
-            class="btn btn-logout w-100 mt-3 d-flex align-items-center justify-content-center gap-2" aria-label="Sidebar Toggle"
-        >
-            <i class="bi bi-layout-text-sidebar-reverse"></i>
+        <!-- Menu Items -->
+        <div class="nav-section">
+            <p class="section-label">MANAGEMENT</p>
+            <nav class="nav flex-column">
+                {#each items as item (item.label)}
+                    <a
+                        href={item.href}
+                        class="nav-link"
+                        class:active={$page.url === item.href || $page.url.startsWith(item.href)}
+                    >
+                        <div class="nav-icon">
+                            <i class="bi bi-{item.icon}"></i>
+                        </div>
+                        <span>{item.label}</span>
+                    </a>
+                {/each}
+            </nav>
+        </div>
+    </div>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+        <div class="version-card">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="status-indicator"></span>
+                    <span class="version-text">YourJob Pro</span>
+                </div>
+                <span class="version-badge">v1.0.4</span>
+            </div>
+        </div>
+
+        <button class="btn-logout" onclick={logout}>
+            <i class="bi bi-box-arrow-left"></i>
+            <span>Log Out</span>
         </button>
     </div>
 </aside>
@@ -108,113 +122,233 @@
         left: 0;
         top: 56px;
         z-index: 100;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        border-right: 1px solid #e2e8f0;
     }
 
+    /* ──── Profile Section ──── */
+    .sidebar-profile {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 1.25rem 1.25rem 1rem;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .profile-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .profile-info {
+        overflow: hidden;
+    }
+
+    .profile-name {
+        margin: 0;
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: #1e293b;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.3;
+    }
+
+    .profile-role {
+        font-size: 0.7rem;
+        color: #64748b;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    /* ──── Content ──── */
     .sidebar-content {
-        padding-top: 1.5rem;
+        padding-top: 0.5rem;
         overflow-y: auto;
     }
 
-    /* Labels de separación */
-    .sidebar-label {
-        font-size: 0.65rem;
-        font-weight: 800;
-        color: #94a3b8;
-        padding: 0 1.5rem 0.75rem 1.8rem;
-        margin: 0;
-        letter-spacing: 0.05rem;
+    .sidebar-content::-webkit-scrollbar {
+        width: 4px;
     }
 
+    .sidebar-content::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+
+    /* ──── Sections ──── */
+    .nav-section {
+        padding: 0.5rem 0;
+    }
+
+    .section-label {
+        font-size: 0.625rem;
+        font-weight: 700;
+        color: #94a3b8;
+        padding: 0.5rem 1.5rem 0.4rem;
+        margin: 0;
+        letter-spacing: 0.08em;
+    }
+
+    /* ──── Nav Links ──── */
     .nav-link {
         display: flex;
         align-items: center;
-        padding: 0.7rem 1rem;
-        color: #475569;
+        padding: 0.55rem 1.25rem;
+        margin: 1px 0.75rem;
+        color: #64748b;
         text-decoration: none;
         border-radius: 10px;
         transition: all 0.2s ease;
         gap: 12px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        position: relative;
     }
 
-    .nav-link i {
-        font-size: 1.15rem;
+    .nav-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f1f5f9;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+
+    .nav-icon i {
+        font-size: 1rem;
+        color: #64748b;
+        transition: color 0.2s ease;
     }
 
     .nav-link:hover {
-        background-color: #f8fafc;
-        color: #0d6efd;
+        color: #3b82f6;
+        background: #eff6ff;
+    }
+
+    .nav-link:hover .nav-icon {
+        background: #dbeafe;
+    }
+
+    .nav-link:hover .nav-icon i {
+        color: #3b82f6;
     }
 
     .nav-link.active {
-        background-color: #eff6ff;
-        color: #2563eb;
+        color: #1d4ed8;
+        background: #eff6ff;
         font-weight: 600;
     }
 
-    /* Estilos de la Footer Card */
+    .nav-link.active .nav-icon {
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+    }
+
+    .nav-link.active .nav-icon i {
+        color: white;
+    }
+
+    .nav-link.active::before {
+        content: '';
+        position: absolute;
+        left: -0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        height: 60%;
+        background: linear-gradient(180deg, #3b82f6, #1d4ed8);
+        border-radius: 0 3px 3px 0;
+    }
+
+    /* ──── Footer ──── */
     .sidebar-footer {
+        padding: 0.75rem 1rem;
         border-top: 1px solid #f1f5f9;
-        background-color: #fff;
     }
 
     .version-card {
         background: #f8fafc;
         border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 12px;
+        border-radius: 10px;
+        padding: 0.65rem 0.85rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .status-indicator {
+        width: 7px;
+        height: 7px;
+        background: #22c55e;
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: 0 0 6px rgba(34, 197, 94, 0.4);
+        animation: pulse-green 2s infinite;
+    }
+
+    @keyframes pulse-green {
+        0%, 100% { box-shadow: 0 0 4px rgba(34, 197, 94, 0.3); }
+        50% { box-shadow: 0 0 8px rgba(34, 197, 94, 0.6); }
+    }
+
+    .version-text {
+        font-size: 0.72rem;
+        color: #475569;
+        font-weight: 600;
     }
 
     .version-badge {
-        background: #e2e8f0;
-        color: #475569;
-        font-size: 0.7rem;
+        background: linear-gradient(135deg, #eff6ff, #dbeafe);
+        color: #2563eb;
+        font-size: 0.65rem;
         padding: 2px 8px;
         border-radius: 6px;
         font-weight: 700;
+        letter-spacing: 0.02em;
     }
 
-    .status-dot {
-        width: 6px;
-        height: 6px;
-        background-color: #22c55e;
-        border-radius: 50%;
-        display: inline-block;
-    }
-
-    .status-text {
-        font-size: 0.7rem;
-        color: #64748b;
-        margin-left: 4px;
-    }
-
-    .version-link {
-        font-size: 0.7rem;
-        color: #3b82f6;
-        text-decoration: none;
-        font-weight: 500;
-    }
-
-    .version-link:hover {
-        text-decoration: underline;
-    }
-
-    /* Botón de Logout */
+    /* ──── Logout Button ──── */
     .btn-logout {
-        background-color: #fff;
-        border: 1px solid #fee2e2;
-        color: #dc2626;
-        font-size: 0.9rem;
-        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
         padding: 0.6rem;
+        background: #fff;
+        border: 1px solid #fecaca;
+        color: #dc2626;
+        font-size: 0.825rem;
+        font-weight: 600;
         border-radius: 10px;
-        transition: all 0.2s;
+        cursor: pointer;
+        transition: all 0.2s ease;
     }
 
     .btn-logout:hover {
-        background-color: #fef2f2;
-        border-color: #fecaca;
+        background: #fef2f2;
+        border-color: #f87171;
+        box-shadow: 0 2px 8px rgba(220, 38, 38, 0.1);
     }
 
+    .btn-logout i {
+        font-size: 1rem;
+    }
+
+    /* ──── Responsive ──── */
     @media (max-width: 768px) {
         .sidebar {
             display: none;

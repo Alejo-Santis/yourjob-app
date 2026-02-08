@@ -6,6 +6,7 @@ use App\Http\Controllers\EmployerProfileController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\JobListingController;
 use App\Http\Controllers\JobSeekerProfileController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -16,6 +17,9 @@ require __DIR__.'/auth.php';
 Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
+
+// Global search API
+Route::get('/api/search', [SearchController::class, 'search'])->name('search');
 
 // Job listings - public access
 Route::get('/jobs', [JobListingController::class, 'index'])->name('jobs.index');
