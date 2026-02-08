@@ -213,4 +213,19 @@
     .list-group-item:last-child {
         border-bottom: none;
     }
+
+    @media (max-width: 576px) {
+        .dashboard-container {
+            padding: 0;
+        }
+
+        .card-header {
+            padding: 0.85rem 1rem;
+        }
+
+        .list-group-item {
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+        }
+    }
 </style>

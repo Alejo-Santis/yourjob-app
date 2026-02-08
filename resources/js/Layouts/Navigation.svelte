@@ -17,6 +17,14 @@
         router.post('/logout');
     };
 
+    function openSearch() {
+        window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true }));
+    }
+
+    function toggleSidebar() {
+        window.dispatchEvent(new CustomEvent('toggle-sidebar'));
+    }
+
     onMount(() => {
         router.on('navigate', () => {
             isMenuOpen = false;
@@ -46,11 +54,20 @@
         };
         return map[userType] || '/';
     }
+
+    let isAuth = $derived(!!$page.props.auth?.user);
 </script>
 
 <nav class="modern-navbar">
     <div class="container">
         <div class="navbar-content">
+            <!-- Mobile: Sidebar toggle (authenticated only) -->
+            {#if isAuth}
+                <button class="sidebar-toggle d-lg-none" onclick={toggleSidebar} aria-label="Open menu">
+                    <i class="bi bi-list"></i>
+                </button>
+            {/if}
+
             <!-- Logo -->
             <a class="navbar-logo" href="/">
                 <img src="/assets/logos/logo-2.png" alt="YourJob" class="logo-img" />
@@ -69,7 +86,7 @@
                         All Jobs
                     </a>
                 </li>
-                {#if $page.props.auth?.user}
+                {#if isAuth}
                     {#if $page.props.auth.user.user_type === 'job_seeker'}
                         <li class="menu-item">
                             <a href="/job-seeker/favorites" class="menu-link" class:active={isActive('/job-seeker/favorites')}>
@@ -104,7 +121,14 @@
 
             <!-- Right Side Actions -->
             <div class="navbar-actions d-none d-lg-flex">
-                {#if !$page.props.auth?.user}
+                <!-- Global Search Trigger -->
+                <button class="search-trigger" onclick={openSearch} title="Search (Ctrl+K)">
+                    <i class="bi bi-search"></i>
+                    <span>Search...</span>
+                    <kbd>Ctrl K</kbd>
+                </button>
+
+                {#if !isAuth}
                     <a href="/login" class="action-link">Login</a>
                     <a href="/register" class="action-button">Sign up</a>
                 {:else}
@@ -144,37 +168,29 @@
                 {/if}
             </div>
 
-            <!-- Mobile Menu Button -->
-            <button class="mobile-menu-button d-lg-none" onclick={toggleMenu} aria-label="Toggle menu">
-                <i class="bi bi-{isMenuOpen ? 'x' : 'list'}"></i>
-            </button>
+            <!-- Mobile: Right side icons -->
+            <div class="mobile-actions d-lg-none">
+                <!-- Mobile search icon -->
+                <button class="mobile-icon-btn" onclick={openSearch} aria-label="Search">
+                    <i class="bi bi-search"></i>
+                </button>
+
+                {#if !isAuth}
+                    <!-- Hamburger for non-authenticated -->
+                    <button class="mobile-icon-btn" onclick={toggleMenu} aria-label="Toggle menu">
+                        <i class="bi bi-{isMenuOpen ? 'x' : 'person-circle'}"></i>
+                    </button>
+                {/if}
+            </div>
         </div>
 
-        <!-- Mobile Menu -->
-        {#if isMenuOpen}
+        <!-- Mobile Menu (non-authenticated only) -->
+        {#if isMenuOpen && !isAuth}
             <div class="mobile-menu d-lg-none">
                 <a href="/" class="mobile-link">Home</a>
                 <a href="/jobs" class="mobile-link">All Jobs</a>
-
-                {#if $page.props.auth?.user}
-                    {#if $page.props.auth.user.user_type === 'job_seeker'}
-                        <a href="/job-seeker/favorites" class="mobile-link">Favorites</a>
-                        <a href="/applications" class="mobile-link">Applications</a>
-                        <a href="/job-seeker/dashboard" class="mobile-link">Dashboard</a>
-                        <a href="/job-seeker/profile" class="mobile-link">Profile</a>
-                    {:else if $page.props.auth.user.user_type === 'employer'}
-                        <a href="/employer/listings" class="mobile-link">My Listings</a>
-                        <a href="/employer/applications" class="mobile-link">Applications</a>
-                        <a href="/employer/dashboard" class="mobile-link">Dashboard</a>
-                        <a href="/employer/profile" class="mobile-link">Profile</a>
-                    {:else if $page.props.auth.user.user_type === 'admin'}
-                        <a href="/admin/dashboard" class="mobile-link">Admin Panel</a>
-                    {/if}
-                    <button class="mobile-link" onclick={logout}>Logout</button>
-                {:else}
-                    <a href="/login" class="mobile-link">Login</a>
-                    <a href="/register" class="mobile-button">Sign up</a>
-                {/if}
+                <a href="/login" class="mobile-link">Login</a>
+                <a href="/register" class="mobile-button">Sign up</a>
             </div>
         {/if}
     </div>
@@ -184,7 +200,7 @@
     .modern-navbar {
         background: white;
         border-bottom: 1px solid #e9ecef;
-        padding: 1rem 0;
+        padding: 0.75rem 0;
         position: sticky;
         top: 0;
         z-index: 1000;
@@ -195,10 +211,32 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 2rem;
+        gap: 1.5rem;
     }
 
-    /* Logo */
+    /* ── Sidebar Toggle (mobile) ── */
+    .sidebar-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        background: transparent;
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        color: #495057;
+        font-size: 1.4rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+
+    .sidebar-toggle:hover {
+        background: #f8f9fa;
+        border-color: #dee2e6;
+    }
+
+    /* ── Logo ── */
     .navbar-logo {
         display: flex;
         align-items: center;
@@ -224,7 +262,7 @@
         letter-spacing: -0.5px;
     }
 
-    /* Desktop Menu */
+    /* ── Desktop Menu ── */
     .navbar-menu {
         display: flex;
         list-style: none;
@@ -262,7 +300,48 @@
         background: #e7f1ff;
     }
 
-    /* Navbar Actions */
+    /* ── Search Trigger (desktop) ── */
+    .search-trigger {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.45rem 0.85rem;
+        background: #f8f9fa;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        color: #94a3b8;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .search-trigger:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+        color: #64748b;
+    }
+
+    .search-trigger i {
+        font-size: 0.85rem;
+    }
+
+    .search-trigger span {
+        color: #94a3b8;
+    }
+
+    .search-trigger kbd {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 5px;
+        padding: 1px 6px;
+        font-size: 0.65rem;
+        font-family: inherit;
+        color: #94a3b8;
+        margin-left: 0.25rem;
+    }
+
+    /* ── Navbar Actions ── */
     .navbar-actions {
         display: flex;
         align-items: center;
@@ -304,7 +383,7 @@
         box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
     }
 
-    /* User Dropdown */
+    /* ── User Dropdown ── */
     .user-dropdown {
         position: relative;
     }
@@ -359,14 +438,8 @@
     }
 
     @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     .dropdown-link {
@@ -405,28 +478,34 @@
         border: none;
     }
 
-    /* Mobile Menu Button */
-    .mobile-menu-button {
+    /* ── Mobile Actions ── */
+    .mobile-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .mobile-icon-btn {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
         background: transparent;
         border: 1px solid #e9ecef;
-        border-radius: 8px;
+        border-radius: 10px;
         color: #495057;
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
     }
 
-    .mobile-menu-button:hover {
+    .mobile-icon-btn:hover {
         background: #f8f9fa;
         border-color: #dee2e6;
     }
 
-    /* Mobile Menu */
+    /* ── Mobile Menu (non-auth) ── */
     .mobile-menu {
         padding-top: 1rem;
         border-top: 1px solid #e9ecef;
@@ -436,7 +515,7 @@
 
     .mobile-link {
         display: block;
-        padding: 0.75rem 1rem;
+        padding: 0.85rem 1rem;
         color: #495057;
         text-decoration: none;
         font-weight: 500;
@@ -449,6 +528,7 @@
         width: 100%;
         text-align: left;
         cursor: pointer;
+        min-height: 48px;
     }
 
     .mobile-link:hover {
@@ -458,7 +538,7 @@
 
     .mobile-button {
         display: block;
-        padding: 0.75rem 1.5rem;
+        padding: 0.85rem 1.5rem;
         background: #0d6efd;
         color: white;
         text-decoration: none;
@@ -466,6 +546,7 @@
         border-radius: 8px;
         text-align: center;
         margin-top: 1rem;
+        min-height: 48px;
     }
 
     .mobile-button:hover {
@@ -473,14 +554,10 @@
         color: white;
     }
 
-    /* Responsive */
+    /* ── Responsive ── */
     @media (max-width: 991px) {
-        .modern-navbar {
-            padding: 0.75rem 0;
-        }
-
         .navbar-content {
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
         .logo-text {
@@ -489,6 +566,20 @@
 
         .logo-img {
             height: 32px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .modern-navbar {
+            padding: 0.5rem 0;
+        }
+
+        .logo-text {
+            display: none;
+        }
+
+        .logo-img {
+            height: 30px;
         }
     }
 </style>

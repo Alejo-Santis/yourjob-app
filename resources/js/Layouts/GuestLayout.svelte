@@ -2,6 +2,7 @@
     import Navigation from './Navigation.svelte';
     import Footer from './Footer.svelte';
     import Toast from '../Components/Toast.svelte';
+    import CommandPalette from '../Components/CommandPalette.svelte';
 
     let { children } = $props();
 </script>
@@ -17,6 +18,7 @@
 </div>
 
 <Toast />
+<CommandPalette />
 
 <style>
     .guest-layout {

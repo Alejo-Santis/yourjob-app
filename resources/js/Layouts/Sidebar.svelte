@@ -1,7 +1,8 @@
 <script>
     import { page, router } from "@inertiajs/svelte";
+    import { onMount } from "svelte";
 
-    let { userType = "job_seeker" } = $props();
+    let { userType = "job_seeker", open = false, onclose = () => {} } = $props();
 
     const jobSeekerItems = [
         { label: "Browse Jobs", href: "/jobs", icon: "search" },
@@ -42,9 +43,30 @@
     function logout() {
         router.post('/logout');
     }
+
+    function handleNavClick() {
+        onclose();
+    }
+
+    onMount(() => {
+        return router.on('navigate', () => {
+            onclose();
+        });
+    });
 </script>
 
-<aside class="sidebar d-flex flex-column">
+<!-- Mobile Backdrop -->
+{#if open}
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <div class="sidebar-backdrop" onclick={onclose} onkeydown={() => {}}></div>
+{/if}
+
+<aside class="sidebar d-flex flex-column" class:open>
+    <!-- Close button (mobile only) -->
+    <button class="sidebar-close" onclick={onclose} aria-label="Close sidebar">
+        <i class="bi bi-x-lg"></i>
+    </button>
+
     <!-- User Profile Section -->
     <div class="sidebar-profile">
         <div class="profile-avatar">
@@ -66,6 +88,7 @@
                     href={dashboardHref}
                     class="nav-link"
                     class:active={$page.url === dashboardHref}
+                    onclick={handleNavClick}
                 >
                     <div class="nav-icon">
                         <i class="bi bi-grid-1x2-fill"></i>
@@ -84,6 +107,7 @@
                         href={item.href}
                         class="nav-link"
                         class:active={$page.url === item.href || $page.url.startsWith(item.href)}
+                        onclick={handleNavClick}
                     >
                         <div class="nav-icon">
                             <i class="bi bi-{item.icon}"></i>
@@ -126,6 +150,14 @@
         border-right: 1px solid #e2e8f0;
     }
 
+    .sidebar-close {
+        display: none;
+    }
+
+    .sidebar-backdrop {
+        display: none;
+    }
+
     /* ──── Profile Section ──── */
     .sidebar-profile {
         display: flex;
@@ -165,7 +197,7 @@
     }
 
     .profile-role {
-        font-size: 0.7rem;
+        font-size: 0.75rem;
         color: #64748b;
         font-weight: 500;
         text-transform: uppercase;
@@ -215,6 +247,7 @@
         font-size: 0.875rem;
         font-weight: 500;
         position: relative;
+        min-height: 44px;
     }
 
     .nav-icon {
@@ -336,6 +369,7 @@
         border-radius: 10px;
         cursor: pointer;
         transition: all 0.2s ease;
+        min-height: 44px;
     }
 
     .btn-logout:hover {
@@ -348,10 +382,80 @@
         font-size: 1rem;
     }
 
-    /* ──── Responsive ──── */
-    @media (max-width: 768px) {
+    /* ──── Mobile: Drawer Overlay ──── */
+    @media (max-width: 991px) {
+        .sidebar-backdrop {
+            display: block;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+            z-index: 1040;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         .sidebar {
-            display: none;
+            top: 0;
+            height: 100vh;
+            z-index: 1050;
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: none;
+            border-right: none;
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .sidebar-close {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #f1f5f9;
+            border-radius: 8px;
+            color: #64748b;
+            font-size: 0.85rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s;
+        }
+
+        .sidebar-close:hover {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .sidebar-profile {
+            padding-top: 1rem;
+        }
+
+        .nav-link {
+            padding: 0.65rem 1.25rem;
+            font-size: 0.925rem;
+            min-height: 48px;
+        }
+
+        .nav-icon {
+            width: 38px;
+            height: 38px;
+        }
+
+        .btn-logout {
+            min-height: 48px;
+            font-size: 0.9rem;
         }
     }
 </style>

@@ -131,10 +131,31 @@
 
     .btn-link {
         text-decoration: none;
-        padding: 0;
+        padding: 0.25rem;
+        min-width: 44px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .btn-link:hover {
         transform: scale(1.2);
+    }
+
+    .card-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    @media (max-width: 576px) {
+        .btn-sm {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            min-height: 44px;
+        }
     }
 </style>
